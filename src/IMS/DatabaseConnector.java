@@ -6,35 +6,29 @@ import java.sql.SQLException;
 
 public class DatabaseConnector 
 {
-	private Connection imsConnector;
+	static final String JDBCDriver = "com.mysql.jdbc.Driver";
+	static final String databaseURL = "jdbc:mysql://localhost/JustinIMS";
 	
-	public Connection ConnectToDatabase()
+	static final String username = "JustinMabbutt";
+	static final String password = "wicked";
+	
+	Connection imsConnector = null;
+	
+	public DatabaseConnector()
 	{
-		String url = "jdbc:mysql://localhost/JustinIMS" + "user=JustinMabbutt&password=wicked";
-		try 
+		try
 		{
-			Class.forName("com.mysql.jdbc.driver").newInstance();
-		} 
-		catch (InstantiationException e1) 
-		{
-			e1.printStackTrace();
-		} 
-		catch (IllegalAccessException e1) 
-		{
-			e1.printStackTrace();
-		} 
-		catch (ClassNotFoundException e1) 
-		{
-			e1.printStackTrace();
+			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("Connecting to Database...");
+			imsConnector = DriverManager.getConnection(databaseURL, username, password);
 		}
-		try 
+		catch(SQLException se)
 		{
-			imsConnector = DriverManager.getConnection(url);
-		} 
-		catch (SQLException e) 
+			se.printStackTrace();
+		}
+		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		return imsConnector;
 	}
 }
