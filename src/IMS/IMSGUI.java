@@ -18,9 +18,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 public class IMSGUI extends JFrame
 {
@@ -51,16 +57,23 @@ public class IMSGUI extends JFrame
         createButtons();
         mainFrame.setTitle("NB Gardens Inventory Management System");
         mainFrame.setSize(800, 500);
+        helpFrame.setTitle("NB Gardens Inventory Management System - User Guide");
+        helpFrame.setSize(400, 250);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        helpFrame.setLocationRelativeTo(null);
+        helpFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         mainFrame.setResizable(false);
+        helpFrame.setResizable(false);
         ImageIcon nbLogo = new ImageIcon("images/nb.png");
         Image nbGardensLogo = nbLogo.getImage();
         mainFrame.setIconImage(nbGardensLogo);
+        helpFrame.setIconImage(nbGardensLogo);
         mainFrame.setLayout(new BorderLayout());
+        helpFrame.setLayout(new BorderLayout());
         buttonPanel.setLayout(new GridLayout(3, 1));
         mainFrame.add(buttonPanel, BorderLayout.EAST);
-        mainFrame.add(stockPanel); 
+        mainFrame.add(stockPanel);
         mainFrame.setVisible(true);
         logger.exiting(getClass().getName(), "initGUI");
     }
@@ -104,7 +117,7 @@ public class IMSGUI extends JFrame
         	@Override
             public void actionPerformed(ActionEvent event) 
             {
-        		
+        		helpFrame.setVisible(true);
             }
         });
         
@@ -218,5 +231,29 @@ public class IMSGUI extends JFrame
     	JScrollPane scrollPane = new JScrollPane(productTable);
     	stockPanel.add(scrollPane);
     	logger.exiting(getClass().getName(), "createStockGrid");
-    }    
+    }  
+    
+    private void UserGuide()
+    {
+    	JTextPane userGuideText = new JTextPane();
+    	StyleContext userGuideStyle = new StyleContext();
+    	final DefaultStyledDocument userGuideDoc = new DefaultStyledDocument(userGuideStyle);
+    	final Style headingStyle = userGuideStyle.addStyle("Heading2", null);
+        headingStyle.addAttribute(StyleConstants.FontSize, new Integer(16));
+        headingStyle.addAttribute(StyleConstants.FontFamily, "serif");
+        headingStyle.addAttribute(StyleConstants.Bold, new Boolean(true));
+        final String userGuide = "NB Gardens Inventory Management System: User Guide/n"
+        		+ "Welcome the NB Gardens Inventory Management System.";
+        try 
+        {
+			userGuideDoc.insertString(0, userGuide, null);
+			userGuideDoc.setParagraphAttributes(0, 1, headingStyle, false);
+		} 
+        catch (BadLocationException e) 
+        {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+        		
+    }
 }
