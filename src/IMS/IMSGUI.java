@@ -27,6 +27,7 @@ public class IMSGUI extends JFrame
 	private static final Logger logger = Logger.getLogger(IMSGUI.class.getName());
 	
 	private JFrame mainFrame = new JFrame();
+	private JFrame helpFrame = new JFrame();
 	private JPanel stockPanel = new JPanel();
 	private JPanel buttonPanel = new JPanel();
 	private JButton add = new JButton();
@@ -103,15 +104,7 @@ public class IMSGUI extends JFrame
         	@Override
             public void actionPerformed(ActionEvent event) 
             {
-        		try
-        	    {
-        			Runtime rs = Runtime.getRuntime();
-        			rs.exec("Notepad C:\\Users\\jmabbutt\\workspace\\JustinIMS\\UserGuide.txt");
-        	    }
-        		catch(java.io.IOException e)
-        	    {
-        	        System.out.println("IOError");
-        	    }
+        		
             }
         });
         
@@ -135,7 +128,7 @@ public class IMSGUI extends JFrame
     		@Override
     		public void actionPerformed(ActionEvent event)
     		{
-    			String name = JOptionPane.showInputDialog(mainFrame, "What is the name of the product you wish to add?", "Add a new product", JOptionPane.PLAIN_MESSAGE);
+    			JOptionPane.showInputDialog(mainFrame, "What is the name of the product you wish to add?", "Add a new product", JOptionPane.PLAIN_MESSAGE);
     		}
     	});
     	
@@ -145,7 +138,7 @@ public class IMSGUI extends JFrame
     		@Override
     		public void actionPerformed(ActionEvent event)
     		{
-    			String name = JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to delete?", "Delete a product", JOptionPane.PLAIN_MESSAGE);
+    			JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to delete?", "Delete a product", JOptionPane.PLAIN_MESSAGE);
     		}
     	});
     	
@@ -155,7 +148,7 @@ public class IMSGUI extends JFrame
     		@Override
     		public void actionPerformed(ActionEvent event)
     		{
-    			String name = JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to change the stock level of?", "Change stock level",JOptionPane.PLAIN_MESSAGE);
+    			JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to change the stock level of?", "Change stock level",JOptionPane.PLAIN_MESSAGE);
     		}
     	});
     	
@@ -169,40 +162,40 @@ public class IMSGUI extends JFrame
     {
     	logger.entering(getClass().getName(), "createStockGrid");   
     	tableRenderer = new DefaultTableCellRenderer();
-    	String[] columnNames = {"Product ID", "Product Name", "Stock Level", "Critical Threshold"};
-    	Object[][] data = {{"1", "Hippy Gnome", "7", "4"},
-    					   {"2", "King Gnome", "12", "4"},
-    					   {"3", "Queen Gnome", "12", "4"},
-    					   {"4", "Nuclear Gnome", "12", "4"},
-    					   {"5", "Biohazard Gnome", "12", "4"},
-    					   {"6", "Obama Gnome", "12", "4"},
-    					   {"7", "Redneck Gnome", "12", "4"},
-    					   {"8", "Business Gnome", "12", "4"},
-    					   {"9", "Chav Gnome", "12", "4"},
-    					   {"10", "Beiber Gnome", "12", "4"},
-    					   {"11", "Potter Gnome", "12", "4"},
-    					   {"12", "Wolverine Gnome", "12", "4"},
-    					   {"13", "Iron Man Gnome", "12", "4"},
-    					   {"14", "Voldemort Gnome", "12", "4"},
-    					   {"15", "Jedi Gnome", "12", "4"},
-    					   {"16", "Sith Gnome", "12", "4"},
-    					   {"17", "Picard Gnome", "12", "4"},
-    					   {"18", "Angel Gnome", "12", "4"},
-    					   {"19", "Gun Gnome", "12", "4"},
-    					   {"20", "Big Gun Gnome", "12", "4"},
-    					   {"21", "Bazooka Gnome", "12", "4"},
-    					   {"22", "Tank Gnome", "12", "4"},
-    					   {"23", "Police Gnome", "12", "4"},
-    					   {"24", "French Gnome", "12", "4"},
-    					   {"25", "Australian Gnome", "12", "4"},
-    					   {"26", "Insane Gnome", "12", "4"},
-    					   {"27", "Demon Gnome", "12", "4"},
-    					   {"28", "Samurai Gnome", "12", "4"},
-    					   {"29", "Time Lord Gnome", "12", "4"},
-    					   {"30", "Chewbacca Gnome", "12", "4"},
-    					   {"31", "Roman Gnome", "12", "4"},
-    					   {"32", "Greek Gnome", "12", "4"},
-    					   {"33", "Other Gnome", "23", "4"}};
+    	String[] columnNames = {"Product ID", "Product Name", "Stock Level", "Critical Threshold", "Price"};
+    	Object[][] data = {{"1", "Hippy Gnome", "7", "4", "12.00"},
+    					   {"2", "King Gnome", "12", "4", "12.00"},
+    					   {"3", "Queen Gnome", "12", "4", "12.00"},
+    					   {"4", "Nuclear Gnome", "12", "4", "12.00"},
+    					   {"5", "Biohazard Gnome", "12", "4", "12.00"},
+    					   {"6", "Obama Gnome", "12", "4", "12.00"},
+    					   {"7", "Redneck Gnome", "12", "4", "12.00"},
+    					   {"8", "Business Gnome", "12", "4", "12.00"},
+    					   {"9", "Chav Gnome", "12", "4", "12.00"},
+    					   {"10", "Beiber Gnome", "12", "4", "12.00"},
+    					   {"11", "Potter Gnome", "12", "4", "12.00"},
+    					   {"12", "Wolverine Gnome", "12", "4", "12.00"},
+    					   {"13", "Iron Man Gnome", "12", "4", "12.00"},
+    					   {"14", "Voldemort Gnome", "12", "4", "12.00"},
+    					   {"15", "Jedi Gnome", "12", "4", "12.00"},
+    					   {"16", "Sith Gnome", "12", "4", "12.00"},
+    					   {"17", "Picard Gnome", "12", "4", "12.00"},
+    					   {"18", "Angel Gnome", "12", "4", "12.00"},
+    					   {"19", "Gun Gnome", "12", "4", "12.00"},
+    					   {"20", "Big Gun Gnome", "12", "4", "12.00"},
+    					   {"21", "Bazooka Gnome", "12", "4", "12.00"},
+    					   {"22", "Tank Gnome", "12", "4", "12.00"},
+    					   {"23", "Police Gnome", "12", "4", "12.00"},
+    					   {"24", "French Gnome", "12", "4", "12.00"},
+    					   {"25", "Australian Gnome", "12", "4", "12.00"},
+    					   {"26", "Insane Gnome", "12", "4", "12.00"},
+    					   {"27", "Demon Gnome", "12", "4", "12.00"},
+    					   {"28", "Samurai Gnome", "12", "4", "12.00"},
+    					   {"29", "Time Lord Gnome", "12", "4", "12.00"},
+    					   {"30", "Chewbacca Gnome", "12", "4", "12.00"},
+    					   {"31", "Roman Gnome", "12", "4", "12.00"},
+    					   {"32", "Greek Gnome", "12", "4", "12.00"},
+    					   {"33", "Other Gnome", "23", "4", "12.00"}};
     	dtm = new DefaultTableModel(data, columnNames);
     	JTable productTable = new JTable(dtm)
     	{
@@ -213,14 +206,15 @@ public class IMSGUI extends JFrame
             }
     	};
     	productTable.getTableHeader().setReorderingAllowed(false);
+    	productTable.getTableHeader().setResizingAllowed(false);
     	productTable.getColumnModel().getColumn(1).setPreferredWidth(200);
     	productTable.getColumnModel().getColumn(2).setPreferredWidth(120);
-    	productTable.getColumnModel().getColumn(3).setPreferredWidth(120);
-    	productTable.getTableHeader().setResizingAllowed(false);
+    	productTable.getColumnModel().getColumn(3).setPreferredWidth(150);  
     	tableRenderer.setHorizontalAlignment(SwingConstants.CENTER);
     	productTable.getColumnModel().getColumn(0).setCellRenderer(tableRenderer);
     	productTable.getColumnModel().getColumn(2).setCellRenderer(tableRenderer);
     	productTable.getColumnModel().getColumn(3).setCellRenderer(tableRenderer);
+    	productTable.getColumnModel().getColumn(4).setCellRenderer(tableRenderer);
     	JScrollPane scrollPane = new JScrollPane(productTable);
     	stockPanel.add(scrollPane);
     	logger.exiting(getClass().getName(), "createStockGrid");
