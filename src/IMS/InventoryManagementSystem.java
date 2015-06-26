@@ -5,6 +5,6 @@ public class InventoryManagementSystem
     public static void main(String[] args) 
     {
     	IMSGUI imsgui = new IMSGUI();
-    	//DatabaseConnector dbConnect = new DatabaseConnector();
+    	DatabaseConnector dbConnect = new DatabaseConnector();
     }
 }
