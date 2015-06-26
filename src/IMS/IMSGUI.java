@@ -117,7 +117,7 @@ public class IMSGUI extends JFrame
         	@Override
             public void actionPerformed(ActionEvent event) 
             {
-        		helpFrame.setVisible(true);
+        		UserGuide();
             }
         });
         
@@ -242,8 +242,8 @@ public class IMSGUI extends JFrame
         headingStyle.addAttribute(StyleConstants.FontSize, new Integer(16));
         headingStyle.addAttribute(StyleConstants.FontFamily, "serif");
         headingStyle.addAttribute(StyleConstants.Bold, new Boolean(true));
-        final String userGuide = "NB Gardens Inventory Management System: User Guide/n"
-        		+ "Welcome the NB Gardens Inventory Management System.";
+        final String userGuide = "NB Gardens Inventory Management System: User Guide" + "\n"
+		        + "Welcome the NB Gardens Inventory Management System.";
         try 
         {
 			userGuideDoc.insertString(0, userGuide, null);
@@ -254,6 +254,10 @@ public class IMSGUI extends JFrame
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}
-        		
+        userGuideText.setDocument(userGuideDoc);
+        userGuideText.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(userGuideText);
+        helpFrame.add(scrollPane);
+        helpFrame.setVisible(true);
     }
 }
