@@ -1,0 +1,36 @@
+NB Gardens Stock Report - 2015/06/27 20:12:08
+
+ProductID	ProductName	StockLevel	CriticalThreshold	Price	
+1		Hippy Gnome		7		5		12.0		
+2		King Gnome		19		5		20.0		
+3		Queen Gnome		22		5		15.0		
+4		Nuclear Gnome		9		5		18.0		
+5		Biohazard Gnome		17		5		17.5		
+6		Obama Gnome		6		5		30.0		
+7		Redneck Gnome		14		5		12.0		
+8		Business Gnome		16		5		24.0		
+9		Chav Gnome		12		5		100.0		
+10		Beiber Gnome		18		5		50.0		
+11		Potter Gnome		15		5		26.0		
+12		Wolverine Gnome		20		5		22.0		
+13		Iron Man Gnome		35		5		22.0		
+14		Voldemort Gnome		27		5		26.0		
+15		Jedi Gnome		42		5		27.5		
+16		Sith Gnome		29		5		27.5		
+17		Picard Gnome		23		5		27.5		
+18		Angel Gnome		31		5		20.0		
+19		Gun Gnome		13		5		22.5		
+20		Big Gun Gnome		21		5		25.0		
+21		Bazooka Gnome		39		5		30.0		
+22		Tank Gnome		40		5		35.0		
+23		Police Gnome		18		5		20.0		
+24		French Gnome		50		5		15.0		
+25		Australian Gnome	8		5		15.0		
+26		Insane Gnome		12		5		7.5		
+27		Demon Gnome		28		5		15.0		
+28		Samurai Gnome		33		5		24.0		
+29		Time Lord Gnome		48		5		15.0		
+30		Chewbacca Gnome		10		5		22.5		
+31		Roman Gnome		37		5		25.0		
+32		Greek Gnome		22		5		25.0		
+33		Other Gnome		46		5		19.0		
