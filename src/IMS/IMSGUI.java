@@ -48,8 +48,8 @@ public class IMSGUI extends JFrame
 	private JTable productTable;
 	private DefaultTableCellRenderer tableRenderer;
 	private TableModel stockChecker;
-	private int changeStockLevel, changeStockID, predictDelivery, startSimulation, randomID;
-	private String deliveryPredictions;
+	private int predictDelivery, startSimulation, randomID;
+	private String deliveryPredictions, changeStockLevel, changeStockID;
 	private Timer simTime = new Timer();
 	private double randomDecrement;
 	private Random randomGenerator = new Random();
@@ -74,7 +74,7 @@ public class IMSGUI extends JFrame
         helpFrame.setTitle("NB Gardens Inventory Management System - User Guide");
         helpFrame.setSize(400, 250);
         predictionsFrame.setTitle("NB Gardens Inventory Management System - Delivery Predictions");
-        predictionsFrame.setSize(400, 250);
+        predictionsFrame.setSize(600, 400);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         helpFrame.setLocationRelativeTo(null);
@@ -182,6 +182,7 @@ public class IMSGUI extends JFrame
     				case ON:
     					simRun = simulationRunning.OFF;
     					simTime.cancel();
+    					dbConnect.updateTable();
     				}
     			}
     		}
@@ -208,10 +209,24 @@ public class IMSGUI extends JFrame
     		@Override
     		public void actionPerformed(ActionEvent event)
     		{
-    			changeStockID = Integer.parseInt(JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to change the stock level of?", "Change stock level",JOptionPane.PLAIN_MESSAGE));
-    			changeStockLevel = Integer.parseInt(JOptionPane.showInputDialog(mainFrame, "Please enter the new stock level of the product.", "Change stock level", JOptionPane.PLAIN_MESSAGE));
-    			dbConnect.updateStockLevel(changeStockID, changeStockLevel);
-    			createStockGrid();
+				changeStockID = JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to change the stock level of?", "Change stock level",JOptionPane.PLAIN_MESSAGE);
+				if(changeStockID != null)
+				{
+	    			while(!isNumber(changeStockID))
+	    			{        					
+	    				changeStockID = JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to change the stock level of?", "Change stock level",JOptionPane.PLAIN_MESSAGE);
+	        		}
+	    			changeStockLevel = JOptionPane.showInputDialog(mainFrame, "Please enter the new stock level of the product.", "Change stock level", JOptionPane.PLAIN_MESSAGE);
+	    			if(changeStockLevel != null)
+	    			{
+		    			while(!isNumber(changeStockLevel))
+		    			{
+		    				changeStockID = JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to change the stock level of?", "Change stock level",JOptionPane.PLAIN_MESSAGE);
+		    			}	
+						dbConnect.updateStockLevel(Integer.parseInt(changeStockID), Integer.parseInt(changeStockLevel));
+						checkStockLevels();
+	    			}
+				}
     		}
     	});
     	
@@ -225,22 +240,15 @@ public class IMSGUI extends JFrame
     {
     	logger.entering(getClass().getName(), "createStockGrid");
 		tableRenderer = new DefaultTableCellRenderer();
-    	productTable = new JTable(dbConnect.getTableModel())
-    	{
-    		@Override
-    		public boolean isCellEditable(int row, int column)
-        	{
-                return false;
-            }
-    	};
-    	stockChecker = productTable.getModel();
-    	for(int i = 1; i < dbConnect.getAmountOfProducts(); i++)
-    	{
-    		if(Integer.parseInt(String.valueOf(stockChecker.getValueAt(i, 2))) < 5)
-    		{
-    			showStockAlert(Integer.parseInt(String.valueOf(stockChecker.getValueAt(i, 1))));
-    		}
-    	}
+		productTable = new JTable(dbConnect.getTableModel())
+		{
+			@Override
+			public boolean isCellEditable(int row, int column)
+	    	{
+	            return false;
+	        }
+		};
+    	checkStockLevels();
     	productTable.getTableHeader().setReorderingAllowed(false);
     	productTable.getTableHeader().setResizingAllowed(false);
     	productTable.getColumnModel().getColumn(0).setPreferredWidth(100);
@@ -253,7 +261,7 @@ public class IMSGUI extends JFrame
     	productTable.getColumnModel().getColumn(3).setCellRenderer(tableRenderer);
     	productTable.getColumnModel().getColumn(4).setCellRenderer(tableRenderer);
     	JScrollPane scrollPane = new JScrollPane(productTable);
-    	stockPanel.add(scrollPane);   	      	
+    	stockPanel.add(scrollPane);   	
     	logger.exiting(getClass().getName(), "createStockGrid");
     }  
     
@@ -320,12 +328,36 @@ public class IMSGUI extends JFrame
 			randomID = randomGenerator.nextInt(32) + 1;
 			randomDecrement = -(randomGenerator.nextInt(2) + 1);
 			dbConnect.getTableModel().setValueAt(Double.parseDouble(String.valueOf(dbConnect.getTableModel().getValueAt(randomID, 2))) + randomDecrement, randomID, 2);
-			createStockGrid();
 		}
 	}
     
+    private void checkStockLevels()
+    {
+    	stockChecker = dbConnect.getTableModel();
+    	for(int i = 1; i < dbConnect.getAmountOfProducts(); i++)
+    	{
+    		if(Integer.parseInt(String.valueOf(stockChecker.getValueAt(i, 2))) < 5)
+    		{
+    			showStockAlert(Integer.parseInt(String.valueOf(stockChecker.getValueAt(i, 0))));
+    		}
+    	}
+    }
+    
+    private boolean isNumber(String userEntry)
+    {
+    	try
+    	{
+    		Integer.parseInt(userEntry);
+    		return true;
+    	}
+    	catch(NumberFormatException nfe)
+    	{
+    		return false;
+    	}
+    }
+    
     private void showStockAlert(int productID)
     {
-    	JOptionPane.showInputDialog(mainFrame, "Stock for Product ID: " + productID + "is below the critical threshold", "Stock Level Alert!", JOptionPane.WARNING_MESSAGE);
+    	JOptionPane.showMessageDialog(mainFrame, "Stock for Product ID: " + productID + " is below the critical threshold", "Stock Level Alert!", JOptionPane.WARNING_MESSAGE);
     }
 }

@@ -7,7 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-
+import java.time.DayOfWeek;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -33,16 +33,16 @@ public class DatabaseConnector
 		{59.f, 55.f, 30.f, 24.f, 89.f, 50.f, 35.f, 40.f, 52.f, 76.f, 68.f, 50.f, 52.f, 30.f, 74.f, 35.f,
 		 53.f, 43.f, 50.f, 33.f, 55.f, 52.f, 83.f, 80.f, 38.f, 52.f, 88.f, 49.f, 57.f, 50.f, 58.f, 32.f, 70.f};
 	private DefaultTableModel tempTableModel;
-	private String updateQuery, orderPrediction;
+	private String updateQuery, orderPrediction, dayOrDays;
 	
 	public DatabaseConnector()
 	{
 		logger.entering(getClass().getName(), "DatabaseConnector");
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");
-			System.out.println("Database connection successful");
+			Class.forName("com.mysql.jdbc.Driver");		
 			imsConnector = DriverManager.getConnection(databaseURL, username, password);
+			System.out.println("Database connection successful");
 		}
 		catch(SQLException se)
 		{
@@ -130,10 +130,10 @@ public class DatabaseConnector
 		{
 			updateQuery = "update product set StockLevel = ? where ProductID = ?";
 			updateStock = imsConnector.prepareStatement(updateQuery);
-			updateStock.setInt(1, productID);
-			updateStock.setInt(2, stockChange);
-			updateStock.executeQuery();
-			updateTable();
+			updateStock.setInt(1, stockChange);
+			updateStock.setInt(2, productID);
+			updateStock.executeUpdate();
+			tempTableModel.setValueAt(stockChange, productID - 1, 2);
 		}
 		catch(SQLException se)
 		{
@@ -186,7 +186,15 @@ public class DatabaseConnector
 		{
 			diffStock[i] = prevStock[i] - Float.parseFloat(products[i].getCurrentStock());
 			timeToDelivery[i] = Float.parseFloat(products[i].getCurrentStock()) / diffStock[i];
-			orderPrediction += "Stock level of product with ID " + i + " will drop below critical threshold in " + Math.ceil(timeToDelivery[i] * 7.f) + " days at current rate of sale." + "\n";
+			if((int)Math.ceil(timeToDelivery[i] * 7.f) == 1)
+			{
+				dayOrDays = " day";
+			}
+			else
+			{
+				dayOrDays = " days";
+			}
+			orderPrediction += "Stock level of product with ID " + (i + 1) + " will drop below critical threshold in " + (int)Math.ceil(timeToDelivery[i] * 7.f) + dayOrDays + " at current rate of sale." + "\n";
 		}
 		return orderPrediction;
 	}

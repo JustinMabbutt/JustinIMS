@@ -1,9 +1,9 @@
-NB Gardens Stock Report - 2015/06/27 20:12:08
+NB Gardens Stock Report - 2015/06/29 11:02:40
 
 ProductID	ProductName	StockLevel	CriticalThreshold	Price	
 1		Hippy Gnome		7		5		12.0		
 2		King Gnome		19		5		20.0		
-3		Queen Gnome		22		5		15.0		
+3		Queen Gnome		21		5		15.0		
 4		Nuclear Gnome		9		5		18.0		
 5		Biohazard Gnome		17		5		17.5		
 6		Obama Gnome		6		5		30.0		
@@ -20,8 +20,8 @@ ProductID	ProductName	StockLevel	CriticalThreshold	Price
 17		Picard Gnome		23		5		27.5		
 18		Angel Gnome		31		5		20.0		
 19		Gun Gnome		13		5		22.5		
-20		Big Gun Gnome		21		5		25.0		
-21		Bazooka Gnome		39		5		30.0		
+20		Big Gun Gnome		24		5		25.0		
+21		Bazooka Gnome		33		5		30.0		
 22		Tank Gnome		40		5		35.0		
 23		Police Gnome		18		5		20.0		
 24		French Gnome		50		5		15.0		
