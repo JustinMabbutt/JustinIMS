@@ -49,7 +49,7 @@ public class IMSGUI extends JFrame
 	private DefaultTableCellRenderer tableRenderer;
 	private TableModel stockChecker;
 	private int predictDelivery, startSimulation, randomID;
-	private String deliveryPredictions, changeStockLevel, changeStockID;
+	private String deliveryPredictions, changeStockLevel, changeStockID, addNewName, addNewQuantity, addNewCrit, addNewPrice;
 	private Timer simTime = new Timer();
 	private double randomDecrement;
 	private Random randomGenerator = new Random();
@@ -139,6 +139,47 @@ public class IMSGUI extends JFrame
             }
         });
         
+        ImageIcon addIcon = new ImageIcon("images/plus.png");
+        JMenuItem addStockItem = new JMenuItem("Add new product to database", addIcon);
+        addStockItem.setToolTipText("Add a new product to the database");
+        addStockItem.addActionListener(new ActionListener()
+        {	
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				addNewName = JOptionPane.showInputDialog(mainFrame, "What is the name of the product you wish to add?", "Add new product",JOptionPane.PLAIN_MESSAGE);
+				if(addNewName != null)
+				{
+	    			addNewQuantity = JOptionPane.showInputDialog(mainFrame, "Please enter the stock level of the new product.", "Add stock level", JOptionPane.PLAIN_MESSAGE);
+	    			if(addNewQuantity != null)
+	    			{
+		    			while(!isNumber(addNewQuantity))
+		    			{
+		    				addNewQuantity = JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to change the stock level of?", "Change stock level",JOptionPane.PLAIN_MESSAGE);
+		    			}	
+		    			addNewCrit = JOptionPane.showInputDialog(mainFrame, "Please enter the critical threshold of the new product.", "Add critical threshold", JOptionPane.PLAIN_MESSAGE);
+		    			if(addNewCrit != null)
+		    			{
+			    			while(!isNumber(addNewCrit))
+			    			{
+			    				addNewCrit = JOptionPane.showInputDialog(mainFrame, "Please enter the critical threshold of the new product.", "Add critical threshold", JOptionPane.PLAIN_MESSAGE);
+			    			}
+			    			addNewPrice = addNewCrit = JOptionPane.showInputDialog(mainFrame, "Please enter the selling price of the new product.", "Add price", JOptionPane.PLAIN_MESSAGE);
+			    			if(addNewPrice != null)
+			    			{
+				    			while(!isNumber(addNewPrice))
+				    			{
+				    				addNewPrice = JOptionPane.showInputDialog(mainFrame, "Please enter the selling price of the new product.", "Add price", JOptionPane.PLAIN_MESSAGE);
+				    			}
+								dbConnect.addNewProduct(addNewName, Integer.parseInt(addNewQuantity), Integer.parseInt(addNewCrit), Float.parseFloat(addNewPrice));
+								checkStockLevels();
+			    			}
+		    			}
+	    			}
+				}
+			}
+		});
+        
         ImageIcon helpIcon = new ImageIcon("images/help.jpg");
         JMenuItem displayHelp = new JMenuItem("Display the User Guide", helpIcon);
         displayHelp.setToolTipText("Open the User Guide");
@@ -150,6 +191,7 @@ public class IMSGUI extends JFrame
         		userGuide();
             }
         });
+        file.add(addStockItem);
 		file.add(printStockList);
         file.add(exit);
         help.add(displayHelp);
@@ -177,7 +219,7 @@ public class IMSGUI extends JFrame
     				{
     				case OFF:
     					simRun = simulationRunning.ON;				    
-    					simTime.schedule(new RandomDecrementTask(), 120 * 1000);  
+    					simTime.schedule(new randomDecrementTask(), 120 * 1000);  
     					break;
     				case ON:
     					simRun = simulationRunning.OFF;
@@ -196,11 +238,11 @@ public class IMSGUI extends JFrame
     		{
     			predictDelivery = JOptionPane.showConfirmDialog(mainFrame, "Do you wish to predict when deliveries will be required?", "Predict when deliveries will be required", JOptionPane.YES_NO_OPTION);
     			if(predictDelivery == JOptionPane.YES_OPTION)
-    				changeStockID = JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to change the stock level of?", "Change stock level",JOptionPane.PLAIN_MESSAGE);	{
+    			{
     				deliveryPredictions = dbConnect.getOrderPrediction();
     				deliveryPredictions(deliveryPredictions);
-    			}
-    		}
+	    		}
+	    	}
     	});
     	
     	changeQuantity.setText("Change the stock level of a product");
@@ -321,7 +363,7 @@ public class IMSGUI extends JFrame
         logger.exiting(getClass().getName(), "deliveryPredictions");
     } 	
   
-    private class RandomDecrementTask extends TimerTask
+    private class randomDecrementTask extends TimerTask
 	{
 		public void run()
 		{

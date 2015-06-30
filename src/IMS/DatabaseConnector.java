@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.time.DayOfWeek;
+import java.util.Random;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -23,17 +24,17 @@ public class DatabaseConnector
 	static final String username = "JustinMabbutt";
 	static final String password = "wicked";
 	
+	private Random randomGen = new Random();
 	private Connection imsConnector = null;
 	private Statement imsStatement = null;
 	private ResultSet imsResultSet = null;
-	private PreparedStatement updateStock;
+	private PreparedStatement updateStock, addStock;
 	private Product[] products;
 	private int rowCount = 0;
-	private float[] diffStock, timeToDelivery, prevStock = 
-		{59.f, 55.f, 30.f, 24.f, 89.f, 50.f, 35.f, 40.f, 52.f, 76.f, 68.f, 50.f, 52.f, 30.f, 74.f, 35.f,
-		 53.f, 43.f, 50.f, 33.f, 55.f, 52.f, 83.f, 80.f, 38.f, 52.f, 88.f, 49.f, 57.f, 50.f, 58.f, 32.f, 70.f};
+	private float randomStock;
+	private float[] diffStock, timeToDelivery, prevStock;	
 	private DefaultTableModel tempTableModel;
-	private String updateQuery, orderPrediction, dayOrDays;
+	private String updateQuery, orderPrediction, dayOrDays, addQuery;
 	
 	public DatabaseConnector()
 	{
@@ -52,6 +53,7 @@ public class DatabaseConnector
 		{
 			e.printStackTrace();
 		}
+		
 		updateTable();
 		logger.exiting(getClass().getName(), "DatabaseConnector");
 	}
@@ -105,6 +107,7 @@ public class DatabaseConnector
 			products = new Product[getAmountOfProducts()];
 			diffStock = new float[getAmountOfProducts()];
 			timeToDelivery = new float[getAmountOfProducts()];
+			prevStock = new float[getAmountOfProducts()];
 			
 			imsResultSet = imsStatement.executeQuery("select * from product");
 			tempTableModel = buildTableModel(imsResultSet);
@@ -116,6 +119,8 @@ public class DatabaseConnector
 						String.valueOf(tempTableModel.getValueAt(i, 2)),
 						String.valueOf(tempTableModel.getValueAt(i, 3)),
 						String.valueOf(tempTableModel.getValueAt(i, 4)));
+				randomStock = randomGen.nextFloat() * 20.f;
+				prevStock[i] = 60.f + randomStock;
 			}
 		}
 		catch(SQLException se)
@@ -139,6 +144,26 @@ public class DatabaseConnector
 		{
 			se.printStackTrace();
 		}
+	}
+	
+	public void addNewProduct(String name, int quantity, int crit, float price)
+	{
+		try 
+		{
+			addQuery = "insert into product(ProductName, StockLevel, CriticalThreshold, Price) values (?, ?, ?, ?)";
+			addStock = imsConnector.prepareStatement(addQuery);
+			addStock.setString(1, name);
+			addStock.setInt(2, quantity);
+			addStock.setInt(3, crit);
+			addStock.setFloat(4, price);
+			addStock.executeUpdate();
+			tempTableModel.addRow(new Object[]{null, name, Integer.toString(quantity), Integer.toString(crit),  Float.toString(price)});
+		} 
+		catch (SQLException se) 
+		{
+			se.printStackTrace();
+		}
+		
 	}
 	
 	public DefaultTableModel buildTableModel(ResultSet rs)

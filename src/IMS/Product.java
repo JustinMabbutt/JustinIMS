@@ -2,6 +2,10 @@ package IMS;
 
 public class Product 
 {
+	/*
+	 * Product class - stores all information regarding products inside the database.
+	 * This means that the program could keep running if connection is lost
+	 */
 	private String productName, price, productID, currentStock, criticalStock;
 	
 	public Product(String tempID, String tempName, String tempStock, String tempCrit, String tempPrice)
