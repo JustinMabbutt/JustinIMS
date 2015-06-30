@@ -196,7 +196,7 @@ public class IMSGUI extends JFrame
     		{
     			predictDelivery = JOptionPane.showConfirmDialog(mainFrame, "Do you wish to predict when deliveries will be required?", "Predict when deliveries will be required", JOptionPane.YES_NO_OPTION);
     			if(predictDelivery == JOptionPane.YES_OPTION)
-    			{
+    				changeStockID = JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to change the stock level of?", "Change stock level",JOptionPane.PLAIN_MESSAGE);	{
     				deliveryPredictions = dbConnect.getOrderPrediction();
     				deliveryPredictions(deliveryPredictions);
     			}
