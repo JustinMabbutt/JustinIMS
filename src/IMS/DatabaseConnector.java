@@ -7,7 +7,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-import java.time.DayOfWeek;
 import java.util.Random;
 import java.util.Vector;
 import java.util.logging.Logger;
