@@ -18,7 +18,7 @@ public class DatabaseConnector
 	private static final Logger logger = Logger.getLogger(IMSGUI.class.getName());
 	
 	static final String JDBCDriver = "com.mysql.jdbc.Driver";
-	static final String databaseURL = "jdbc:mysql://10.50.15.14:3306/IMS";
+	static final String databaseURL = "jdbc:mysql://10:50:15:11:3306/ims";
 	
 	static final String username = "JustinMabbutt";
 	static final String password = "wicked";

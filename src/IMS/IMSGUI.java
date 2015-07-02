@@ -318,7 +318,9 @@ public class IMSGUI extends JFrame
         headingStyle.addAttribute(StyleConstants.FontFamily, "serif");
         headingStyle.addAttribute(StyleConstants.Bold, new Boolean(true));
         final String userGuide = "NB Gardens Inventory Management System: User Guide" + "\n"
-		        + "Welcome the NB Gardens Inventory Management System.";
+		        + "Welcome the NB Gardens Inventory Management System." + "\n"
+		        + "Use the mouse to control the system, the buttons on the right" + "\n"
+		        + "";
         try 
         {
 			userGuideDoc.insertString(0, userGuide, null);
