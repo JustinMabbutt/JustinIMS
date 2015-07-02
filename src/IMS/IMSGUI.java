@@ -219,7 +219,7 @@ public class IMSGUI extends JFrame
     				{
     				case OFF:
     					simRun = simulationRunning.ON;				    
-    					simTime.schedule(new randomDecrementTask(), 120 * 1000);  
+    					simTime.schedule(new randomDecrementTask(), 5 * 1000);  
     					break;
     				case ON:
     					simRun = simulationRunning.OFF;
