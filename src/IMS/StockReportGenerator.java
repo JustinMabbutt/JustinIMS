@@ -1,6 +1,7 @@
 package IMS;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -14,19 +15,21 @@ public class StockReportGenerator
 {
 	private static final Logger logger = Logger.getLogger(IMSGUI.class.getName());
 	
-	private String reportFilepath;
 	private DateFormat dateFormat;
 	private Date date;
+	private File stockReport;
 	
 	public void CreateStockReport(JTable stockTable)
 	{
+		logger.entering(getClass().getName(), "CreateStockReport");
+		
 		dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		date = new Date();
-		
-		reportFilepath = "C:\\Users\\justi_000\\workspace\\JustinIMS\\StockReport.txt";
-		try 
+		stockReport = new File("C:/Users/jmabbutt/workspace/JustinIMS/StockReport.txt");
+		try
 		{
-			BufferedWriter writer = new BufferedWriter(new FileWriter(reportFilepath));
+			stockReport.createNewFile();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(stockReport));
 			
 			writer.write("NB Gardens Stock Report - " + dateFormat.format(date));
 			writer.newLine();
@@ -60,6 +63,6 @@ public class StockReportGenerator
 		{
 			e.printStackTrace();
 		}
-		
+		logger.exiting(getClass().getName(), "CreateStockReport");
 	}
 }

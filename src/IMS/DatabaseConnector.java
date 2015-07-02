@@ -97,6 +97,7 @@ public class DatabaseConnector
 	
 	public void updateTable()
 	{
+		logger.entering(getClass().getName(), "updateTable");
 		try
 		{
 			imsStatement = imsConnector.createStatement();
@@ -126,10 +127,12 @@ public class DatabaseConnector
 		{
 			se.printStackTrace();
 		}
+		logger.exiting(getClass().getName(), "updateTable");
 	}
 	
 	public void updateStockLevel(int productID, int stockChange)
 	{
+		logger.entering(getClass().getName(), "updateStockLevel");
 		try
 		{
 			updateQuery = "update product set StockLevel = ? where ProductID = ?";
@@ -143,10 +146,12 @@ public class DatabaseConnector
 		{
 			se.printStackTrace();
 		}
+		logger.exiting(getClass().getName(), "updateStockLevel");
 	}
 	
 	public void addNewProduct(String name, int quantity, int crit, float price)
 	{
+		logger.entering(getClass().getName(), "addNewProduct");
 		try 
 		{
 			addQuery = "insert into product(ProductName, StockLevel, CriticalThreshold, Price) values (?, ?, ?, ?)";
@@ -162,15 +167,14 @@ public class DatabaseConnector
 		{
 			se.printStackTrace();
 		}
-		
+		logger.exiting(getClass().getName(), "addNewProduct");
 	}
 	
 	public DefaultTableModel buildTableModel(ResultSet rs)
 	{
 		logger.entering(getClass().getName(), "buildTableModel");
 		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		Vector<String> columnNames = new Vector<String>();
-		
+		Vector<String> columnNames = new Vector<String>();	
 		try 
 		{
 			ResultSetMetaData metaData = rs.getMetaData();			
@@ -205,6 +209,7 @@ public class DatabaseConnector
 	
 	public String getOrderPrediction()
 	{
+		logger.entering(getClass().getName(), "getOrderPrediction");
 		orderPrediction = "NB Gardens Delivery Predictions" + "\n";
 		for(int i = 0; i < getAmountOfProducts(); i++)
 		{
@@ -220,6 +225,7 @@ public class DatabaseConnector
 			}
 			orderPrediction += "Stock level of product with ID " + (i + 1) + " will drop below critical threshold in " + (int)Math.ceil(timeToDelivery[i] * 7.f) + dayOrDays + " at current rate of sale." + "\n";
 		}
+		logger.exiting(getClass().getName(), "getOrderPrediction");
 		return orderPrediction;
 	}
 }

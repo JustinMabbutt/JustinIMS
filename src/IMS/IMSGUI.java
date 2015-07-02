@@ -135,7 +135,7 @@ public class IMSGUI extends JFrame
             public void actionPerformed(ActionEvent event) 
             {
                 reportGenerator.CreateStockReport(productTable);
-                System.out.println("Stock report created - saved to StockReport.txt");
+                System.out.println("Stock report created - saved to solution directory");
             }
         });
         
@@ -375,6 +375,7 @@ public class IMSGUI extends JFrame
     
     private void checkStockLevels()
     {
+    	logger.entering(getClass().getName(), "checkStockLevels");
     	stockChecker = dbConnect.getTableModel();
     	for(int i = 1; i < dbConnect.getAmountOfProducts(); i++)
     	{
@@ -383,10 +384,11 @@ public class IMSGUI extends JFrame
     			showStockAlert(Integer.parseInt(String.valueOf(stockChecker.getValueAt(i, 0))));
     		}
     	}
+    	logger.exiting(getClass().getName(), "checkStockLevels");
     }
     
     private boolean isNumber(String userEntry)
-    {
+    { 	
     	try
     	{
     		Integer.parseInt(userEntry);
@@ -400,6 +402,8 @@ public class IMSGUI extends JFrame
     
     private void showStockAlert(int productID)
     {
+    	logger.entering(getClass().getName(), "showStockAlert");
     	JOptionPane.showMessageDialog(mainFrame, "Stock for Product ID: " + productID + " is below the critical threshold", "Stock Level Alert!", JOptionPane.WARNING_MESSAGE);
+    	logger.exiting(getClass().getName(), "showStockAlert");
     }
 }

@@ -7,7 +7,7 @@ public class InventoryManagementSystem
 	 */
     public static void main(String[] args) 
     {
-    	System.out.println("HELLO");
+    	System.out.println("System startup...");
     	IMSGUI imsgui = new IMSGUI();
     }
 }
