@@ -17,7 +17,7 @@ public class StockReportGenerator
 	
 	private DateFormat dateFormat;
 	private Date date;
-	private File stockReport;
+	private String stockReportFilePath;
 	
 	public void CreateStockReport(JTable stockTable)
 	{
@@ -25,11 +25,10 @@ public class StockReportGenerator
 		
 		dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		date = new Date();
-		stockReport = new File("C:/Users/jmabbutt/workspace/JustinIMS/StockReport.txt");
+		stockReportFilePath = "C:/Users/jmabbutt/workspace/JustinIMS/StockReport.txt";
 		try
 		{
-			stockReport.createNewFile();
-			BufferedWriter writer = new BufferedWriter(new FileWriter(stockReport));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(stockReportFilePath));
 			
 			writer.write("NB Gardens Stock Report - " + dateFormat.format(date));
 			writer.newLine();
