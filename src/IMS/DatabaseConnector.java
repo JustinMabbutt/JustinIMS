@@ -18,10 +18,10 @@ public class DatabaseConnector
 	private static final Logger logger = Logger.getLogger(IMSGUI.class.getName());
 	
 	static final String JDBCDriver = "com.mysql.jdbc.Driver";
-	static final String databaseURL = "jdbc:mysql://10.50.15.11/ims";
+	static final String databaseURL = "jdbc:mysql://localhost/ims";
 	
-	static final String username = "JustinMabbutt";
-	static final String password = "wicked";
+	static final String username = "root";
+	static final String password = "root";
 	
 	private Random randomGen = new Random();
 	private Connection imsConnector = null;
@@ -51,8 +51,7 @@ public class DatabaseConnector
 		catch(Exception e)
 		{
 			e.printStackTrace();
-		}
-		
+		}		
 		updateTable();
 		logger.exiting(getClass().getName(), "DatabaseConnector");
 	}

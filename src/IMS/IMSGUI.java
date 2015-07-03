@@ -95,7 +95,6 @@ public class IMSGUI extends JFrame
         buttonPanel.setLayout(new GridLayout(3, 1));
         mainFrame.add(buttonPanel, BorderLayout.EAST);
         mainFrame.add(stockPanel);
-        mainFrame.setVisible(true);
         mainFrame.addWindowListener(new WindowAdapter() 
         {
         	public void windowClosing(WindowEvent evt) 
@@ -105,6 +104,11 @@ public class IMSGUI extends JFrame
         	}
         });
         logger.exiting(getClass().getName(), "initGUI");
+    }
+    
+    public void showUI()
+    {
+    	mainFrame.setVisible(true);
     }
 
     private void createMenuBar() 
@@ -167,7 +171,7 @@ public class IMSGUI extends JFrame
 			    			addNewPrice = addNewCrit = JOptionPane.showInputDialog(mainFrame, "Please enter the selling price of the new product.", "Add price", JOptionPane.PLAIN_MESSAGE);
 			    			if(addNewPrice != null)
 			    			{
-				    			while(!isNumber(addNewPrice))
+				    			while(!isFloat(addNewPrice))
 				    			{
 				    				addNewPrice = JOptionPane.showInputDialog(mainFrame, "Please enter the selling price of the new product.", "Add price", JOptionPane.PLAIN_MESSAGE);
 				    			}
@@ -394,6 +398,19 @@ public class IMSGUI extends JFrame
     	try
     	{
     		Integer.parseInt(userEntry);
+    		return true;
+    	}
+    	catch(NumberFormatException nfe)
+    	{
+    		return false;
+    	}
+    }
+    
+    private boolean isFloat(String userEntry)
+    {
+    	try
+    	{
+    		Float.parseFloat(userEntry);
     		return true;
     	}
     	catch(NumberFormatException nfe)
