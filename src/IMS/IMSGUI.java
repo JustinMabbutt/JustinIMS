@@ -26,12 +26,19 @@ import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+
+/**
+ * 
+ * @author JustinMabbutt
+ *
+ */
 
 public class IMSGUI extends JFrame
 {
@@ -53,8 +60,8 @@ public class IMSGUI extends JFrame
 	private Timer simTime = new Timer();
 	private double randomDecrement;
 	private Random randomGenerator = new Random();
-	private enum simulationRunning {OFF, ON};
-	simulationRunning simRun = simulationRunning.OFF;
+	private SimulationRunning simRun = SimulationRunning.OFF;
+	private DefaultTableModel tableModel = new DefaultTableModel();
 	
 	public IMSGUI() 
 	{
@@ -103,6 +110,7 @@ public class IMSGUI extends JFrame
         	     System.exit(0);
         	}
         });
+        mainFrame.setVisible(true);
         logger.exiting(getClass().getName(), "initGUI");
     }
     
@@ -138,7 +146,7 @@ public class IMSGUI extends JFrame
         	@Override
             public void actionPerformed(ActionEvent event) 
             {
-                reportGenerator.CreateStockReport(productTable);
+                reportGenerator.createStockReport(productTable);
                 System.out.println("Stock report created - saved to solution directory");
             }
         });
@@ -175,7 +183,9 @@ public class IMSGUI extends JFrame
 				    			{
 				    				addNewPrice = JOptionPane.showInputDialog(mainFrame, "Please enter the selling price of the new product.", "Add price", JOptionPane.PLAIN_MESSAGE);
 				    			}
-								dbConnect.addNewProduct(addNewName, Integer.parseInt(addNewQuantity), Integer.parseInt(addNewCrit), Float.parseFloat(addNewPrice));
+								dbConnect.addNewProduct(addNewName, Integer.parseInt(addNewQuantity), Integer.parseInt(addNewCrit), Float.parseFloat(addNewPrice));						
+								dbConnect.loadData();
+								createStockGrid();
 								checkStockLevels();
 			    			}
 		    			}
@@ -222,13 +232,14 @@ public class IMSGUI extends JFrame
     				switch(simRun)
     				{
     				case OFF:
-    					simRun = simulationRunning.ON;				    
+    					simRun = SimulationRunning.ON;				    
     					simTime.schedule(new randomDecrementTask(), 5 * 1000);  
     					break;
     				case ON:
-    					simRun = simulationRunning.OFF;
+    					simRun = SimulationRunning.OFF;
     					simTime.cancel();
-    					dbConnect.updateTable();
+    					dbConnect.loadData();
+    					createStockGrid();
     				}
     			}
     		}
@@ -270,12 +281,13 @@ public class IMSGUI extends JFrame
 		    				changeStockID = JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to change the stock level of?", "Change stock level",JOptionPane.PLAIN_MESSAGE);
 		    			}	
 						dbConnect.updateStockLevel(Integer.parseInt(changeStockID), Integer.parseInt(changeStockLevel));
+						dbConnect.loadData();
+						createStockGrid();
 						checkStockLevels();
 	    			}
 				}
     		}
     	});
-    	
     	buttonPanel.add(timeSimulation);
     	buttonPanel.add(orderPrediction);
     	buttonPanel.add(changeQuantity);
@@ -286,7 +298,8 @@ public class IMSGUI extends JFrame
     {
     	logger.entering(getClass().getName(), "createStockGrid");
 		tableRenderer = new DefaultTableCellRenderer();
-		productTable = new JTable(dbConnect.getTableModel())
+		tableModel = dbConnect.getTableModel();
+		productTable = new JTable(tableModel)
 		{
 			@Override
 			public boolean isCellEditable(int row, int column)
@@ -307,7 +320,7 @@ public class IMSGUI extends JFrame
     	productTable.getColumnModel().getColumn(3).setCellRenderer(tableRenderer);
     	productTable.getColumnModel().getColumn(4).setCellRenderer(tableRenderer);
     	JScrollPane scrollPane = new JScrollPane(productTable);
-    	stockPanel.add(scrollPane);   	
+    	stockPanel.add(scrollPane);
     	logger.exiting(getClass().getName(), "createStockGrid");
     }  
     

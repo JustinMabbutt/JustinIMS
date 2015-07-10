@@ -1,7 +1,6 @@
 package IMS;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -11,6 +10,12 @@ import java.util.logging.Logger;
 
 import javax.swing.JTable;
 
+/**
+ * 
+ * @author JustinMabbutt
+ *
+ */
+
 public class StockReportGenerator 
 {
 	private static final Logger logger = Logger.getLogger(IMSGUI.class.getName());
@@ -19,7 +24,12 @@ public class StockReportGenerator
 	private Date date;
 	private String stockReportFilePath;
 	
-	public void CreateStockReport(JTable stockTable)
+	public void createOrderForm(JTable stockTable)
+	{
+		
+	}
+	
+	public void createStockReport(JTable stockTable)
 	{
 		logger.entering(getClass().getName(), "CreateStockReport");
 		

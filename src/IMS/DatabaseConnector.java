@@ -12,6 +12,13 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+/**
+ * 
+ * @author JustinMabbutt
+ *
+ */
 
 public class DatabaseConnector 
 {
@@ -20,8 +27,8 @@ public class DatabaseConnector
 	static final String JDBCDriver = "com.mysql.jdbc.Driver";
 	static final String databaseURL = "jdbc:mysql://localhost/ims";
 	
-	static final String username = "root";
-	static final String password = "root";
+	static final String username = "JustinMabbutt";
+	static final String password = "wicked";
 	
 	private Random randomGen = new Random();
 	private Connection imsConnector = null;
@@ -32,7 +39,7 @@ public class DatabaseConnector
 	private int rowCount = 0;
 	private float randomStock;
 	private float[] diffStock, timeToDelivery, prevStock;	
-	private DefaultTableModel tempTableModel;
+	private DefaultTableModel tempTableModel = new DefaultTableModel();
 	private String updateQuery, orderPrediction, dayOrDays, addQuery;
 	
 	public DatabaseConnector()
@@ -52,7 +59,7 @@ public class DatabaseConnector
 		{
 			e.printStackTrace();
 		}		
-		updateTable();
+		loadData();
 		logger.exiting(getClass().getName(), "DatabaseConnector");
 	}
 	
@@ -94,7 +101,7 @@ public class DatabaseConnector
 		return rowCount;
 	}
 	
-	public void updateTable()
+	public void loadData()
 	{
 		logger.entering(getClass().getName(), "updateTable");
 		try
@@ -126,6 +133,7 @@ public class DatabaseConnector
 		{
 			se.printStackTrace();
 		}
+		
 		logger.exiting(getClass().getName(), "updateTable");
 	}
 	
@@ -138,8 +146,7 @@ public class DatabaseConnector
 			updateStock = imsConnector.prepareStatement(updateQuery);
 			updateStock.setInt(1, stockChange);
 			updateStock.setInt(2, productID);
-			updateStock.executeUpdate();
-			tempTableModel.setValueAt(stockChange, productID - 1, 2);
+			updateStock.executeUpdate();	
 		}
 		catch(SQLException se)
 		{
