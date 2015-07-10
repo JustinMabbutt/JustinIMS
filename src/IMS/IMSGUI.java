@@ -61,7 +61,6 @@ public class IMSGUI extends JFrame
 	private double randomDecrement;
 	private Random randomGenerator = new Random();
 	private SimulationRunning simRun = SimulationRunning.OFF;
-	private DefaultTableModel tableModel = new DefaultTableModel();
 	
 	public IMSGUI() 
 	{
@@ -74,7 +73,7 @@ public class IMSGUI extends JFrame
     {
     	logger.entering(getClass().getName(), "initGUI");
         createMenuBar();
-        createStockGrid();
+        createStockGrid(dbConnect.getTableModel());
         createButtons();
         mainFrame.setTitle("NB Gardens Inventory Management System");
         mainFrame.setSize(800, 500);
@@ -106,8 +105,8 @@ public class IMSGUI extends JFrame
         {
         	public void windowClosing(WindowEvent evt) 
         	{
-        	     dbConnect.closeDatabaseConnection();
-        	     System.exit(0);
+        		dbConnect.closeDatabaseConnection();
+        	    System.exit(0);
         	}
         });
         mainFrame.setVisible(true);
@@ -147,7 +146,7 @@ public class IMSGUI extends JFrame
             public void actionPerformed(ActionEvent event) 
             {
                 reportGenerator.createStockReport(productTable);
-                System.out.println("Stock report created - saved to solution directory");
+                JOptionPane.showMessageDialog(mainFrame, "Stock Report generated. It has been saved to solution directory ", "Stock Report", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         
@@ -183,9 +182,7 @@ public class IMSGUI extends JFrame
 				    			{
 				    				addNewPrice = JOptionPane.showInputDialog(mainFrame, "Please enter the selling price of the new product.", "Add price", JOptionPane.PLAIN_MESSAGE);
 				    			}
-								dbConnect.addNewProduct(addNewName, Integer.parseInt(addNewQuantity), Integer.parseInt(addNewCrit), Float.parseFloat(addNewPrice));						
-								dbConnect.loadData();
-								createStockGrid();
+								dbConnect.addNewProduct(addNewName, Integer.parseInt(addNewQuantity), Integer.parseInt(addNewCrit), Float.parseFloat(addNewPrice));
 								checkStockLevels();
 			    			}
 		    			}
@@ -238,8 +235,7 @@ public class IMSGUI extends JFrame
     				case ON:
     					simRun = SimulationRunning.OFF;
     					simTime.cancel();
-    					dbConnect.loadData();
-    					createStockGrid();
+    					createStockGrid(dbConnect.getTableModel());
     				}
     			}
     		}
@@ -281,8 +277,6 @@ public class IMSGUI extends JFrame
 		    				changeStockID = JOptionPane.showInputDialog(mainFrame, "What is the ID of the product you wish to change the stock level of?", "Change stock level",JOptionPane.PLAIN_MESSAGE);
 		    			}	
 						dbConnect.updateStockLevel(Integer.parseInt(changeStockID), Integer.parseInt(changeStockLevel));
-						dbConnect.loadData();
-						createStockGrid();
 						checkStockLevels();
 	    			}
 				}
@@ -294,11 +288,10 @@ public class IMSGUI extends JFrame
     	logger.exiting(getClass().getName(), "createButtons");
     }
     
-    private void createStockGrid()
+    private void createStockGrid(DefaultTableModel tableModel)
     {
     	logger.entering(getClass().getName(), "createStockGrid");
 		tableRenderer = new DefaultTableCellRenderer();
-		tableModel = dbConnect.getTableModel();
 		productTable = new JTable(tableModel)
 		{
 			@Override
@@ -389,6 +382,7 @@ public class IMSGUI extends JFrame
 			randomID = randomGenerator.nextInt(32) + 1;
 			randomDecrement = -(randomGenerator.nextInt(2) + 1);
 			dbConnect.getTableModel().setValueAt(Double.parseDouble(String.valueOf(dbConnect.getTableModel().getValueAt(randomID, 2))) + randomDecrement, randomID, 2);
+			JOptionPane.showMessageDialog(mainFrame, "Stock for Product ID: " + randomID + " has been decremented by " + randomDecrement, "Simulation Information", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
     

@@ -35,7 +35,7 @@ public class StockReportGenerator
 		
 		dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		date = new Date();
-		stockReportFilePath = "C:/Users/jmabbutt/workspace/JustinIMS/StockReport.txt";
+		stockReportFilePath = "C:/Users/justi_000/workspace/JustinIMS/StockReport.txt";
 		try
 		{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(stockReportFilePath));
