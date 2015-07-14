@@ -1,21 +1,30 @@
 package IMS;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -26,6 +35,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -47,12 +59,11 @@ public class IMSGUI extends JFrame
 	
 	StockReportGenerator reportGenerator = new StockReportGenerator();
 	DatabaseConnector dbConnect = new DatabaseConnector();
-	private JFrame mainFrame = new JFrame(), helpFrame = new JFrame(), predictionsFrame = new JFrame();
-	private JPanel stockPanel = new JPanel();
-	private JPanel buttonPanel = new JPanel();
-	private JButton timeSimulation = new JButton();
-	private JButton changeQuantity = new JButton();
-	private JButton orderPrediction = new JButton();
+	private JFrame mainFrame = new JFrame(), helpFrame = new JFrame(), predictionsFrame = new JFrame(), splashFrame = new JFrame();;
+	private JPanel stockPanel = new JPanel(), buttonPanel = new JPanel();
+	private JButton timeSimulation = new JButton(), changeQuantity = new JButton(), orderPrediction = new JButton();;
+	private ImageIcon splashIcon, nbLogo;
+	private JLabel splashLabel = new JLabel();
 	private JTable productTable;
 	private DefaultTableCellRenderer tableRenderer;
 	private TableModel stockChecker;
@@ -63,15 +74,97 @@ public class IMSGUI extends JFrame
 	private Random randomGenerator = new Random();
 	private SimulationRunning simRun = SimulationRunning.OFF;
 	private Image nbGardensLogo;
-	private ImageIcon nbLogo;
+	private BufferedImage splash = null; 
+	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	
 	public IMSGUI() 
 	{
 		logger.entering(getClass().getName(), "IMSGUI");
-        initUI();
-        logger.exiting(getClass().getName(), "IMSGUI");
+		try
+		{
+			for(LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+			{
+				if("Nimbus".equals(info.getName()))
+				{
+					UIManager.setLookAndFeel(info.getClassName());
+				}
+			}
+		}
+		catch (UnsupportedLookAndFeelException ue)
+		{
+			logger.log(Level.SEVERE, "Unsupported format", ue);
+		}
+		catch (ClassNotFoundException ce)
+		{
+			logger.log(Level.SEVERE, "Class not found", ce);
+		}
+		catch (InstantiationException ie)
+		{
+			logger.log(Level.SEVERE, "Instantiation exception", ie);
+		}
+		catch (IllegalAccessException iae)
+		{
+			logger.log(Level.SEVERE, "Illegal access exception", iae);
+		}
+		logger.exiting(getClass().getName(), "IMSGUI");
     }
 
+	public void displaySplash()
+	{
+		logger.entering(getClass().getName(), "displaySplash");
+		try 
+		{
+			splash = ImageIO.read(new File("C:/Users/justi_000/workspace/JustinIMS/images/splash.jpg"));
+		} 
+		catch (IOException ie) 
+		{
+			logger.log(Level.SEVERE, "Error loading splash image", ie);
+		}
+		splashIcon = new ImageIcon(splash);
+		splashLabel = new JLabel();
+		splashLabel.setIcon(splashIcon);
+		splashFrame = new JFrame();
+		splashFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+		nbLogo = new ImageIcon("images/nb.png");
+        nbGardensLogo = nbLogo.getImage();
+        splashFrame.setResizable(false);
+        splashFrame.setTitle("Welcome to the NB Gardens IMS");
+        splashFrame.setSize(splashIcon.getIconWidth() + 15, splashIcon.getIconHeight() + 20);  
+        splashFrame.setLocation((int)screenSize.getWidth() / 2 - splashIcon.getIconWidth() / 2, (int)screenSize.getHeight() / 2 - splashIcon.getIconHeight() / 2);
+        splashFrame.setIconImage(nbGardensLogo);
+        splashLabel.addMouseListener(new MouseListener() 
+        {		
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{	
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e)
+			{	
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e)
+			{	
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) 
+			{				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				initUI();
+				splashFrame.dispose();
+			}
+		});
+		splashFrame.add(splashLabel, BorderLayout.CENTER);
+		splashFrame.setVisible(true);
+	}
+	
     private void initUI() 
     {
     	logger.entering(getClass().getName(), "initGUI");
@@ -104,6 +197,7 @@ public class IMSGUI extends JFrame
         buttonPanel.setLayout(new GridLayout(3, 1));
         mainFrame.add(buttonPanel, BorderLayout.EAST);
         mainFrame.add(stockPanel);
+        mainFrame.setVisible(true);
         mainFrame.addWindowListener(new WindowAdapter() 
         {
         	public void windowClosing(WindowEvent evt) 
@@ -112,15 +206,14 @@ public class IMSGUI extends JFrame
         	    System.exit(0);
         	}
         });
-        mainFrame.setVisible(true);
         logger.exiting(getClass().getName(), "initGUI");
     }
     
-    public void showUI()
+    public JFrame getMainFrame()
     {
-    	mainFrame.setVisible(true);
+    	return mainFrame;
     }
-
+    
     private void createMenuBar() 
     {
     	logger.entering(getClass().getName(), "createMenuBar");
@@ -140,8 +233,21 @@ public class IMSGUI extends JFrame
             }
         });
         
-        ImageIcon printIcon = new ImageIcon("images/txt.png");
-        JMenuItem printStockList = new JMenuItem("Write Stock List", printIcon);
+        ImageIcon printPurchaseOrderIcon = new ImageIcon("images/txt.png");
+        JMenuItem printPurchaseOrder = new JMenuItem("Write Purchase Order", printPurchaseOrderIcon);
+        printPurchaseOrder.setToolTipText("Write a purchase order of items with critically low stock to a text file");
+        printPurchaseOrder.addActionListener(new ActionListener()
+        {
+        	@Override
+            public void actionPerformed(ActionEvent event) 
+            {
+                reportGenerator.createPurchaseOrder(productTable);
+                JOptionPane.showMessageDialog(mainFrame, "Purchase Order generated. It has been saved to solution directory ", "Purchase Order", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        
+        ImageIcon printStockReportIcon = new ImageIcon("images/txt.png");
+        JMenuItem printStockList = new JMenuItem("Write Stock List", printStockReportIcon);
         printStockList.setToolTipText("Write the current stock list to a text file");
         printStockList.addActionListener(new ActionListener()
         {
@@ -159,7 +265,7 @@ public class IMSGUI extends JFrame
         addStockItem.addActionListener(new ActionListener()
         {	
 			@Override
-			public void actionPerformed(ActionEvent e) 
+			public void actionPerformed(ActionEvent e)
 			{
 				addNewName = JOptionPane.showInputDialog(mainFrame, "What is the name of the product you wish to add?", "Add new product",JOptionPane.PLAIN_MESSAGE);
 				if(addNewName != null)
@@ -207,6 +313,7 @@ public class IMSGUI extends JFrame
         });
         file.add(addStockItem);
 		file.add(printStockList);
+		file.add(printPurchaseOrder);
         file.add(exit);
         help.add(displayHelp);
         menuBar.add(file);
@@ -306,15 +413,17 @@ public class IMSGUI extends JFrame
     	checkStockLevels();
     	productTable.getTableHeader().setReorderingAllowed(false);
     	productTable.getTableHeader().setResizingAllowed(false);
-    	productTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+    	productTable.getColumnModel().getColumn(0).setPreferredWidth(120);
     	productTable.getColumnModel().getColumn(1).setPreferredWidth(200);
     	productTable.getColumnModel().getColumn(2).setPreferredWidth(120);
-    	productTable.getColumnModel().getColumn(3).setPreferredWidth(150);  
+    	productTable.getColumnModel().getColumn(3).setPreferredWidth(180);
+    	productTable.getColumnModel().getColumn(5).setPreferredWidth(150);
     	tableRenderer.setHorizontalAlignment(SwingConstants.CENTER);
     	productTable.getColumnModel().getColumn(0).setCellRenderer(tableRenderer);
     	productTable.getColumnModel().getColumn(2).setCellRenderer(tableRenderer);
     	productTable.getColumnModel().getColumn(3).setCellRenderer(tableRenderer);
     	productTable.getColumnModel().getColumn(4).setCellRenderer(tableRenderer);
+    	productTable.getColumnModel().getColumn(5).setCellRenderer(tableRenderer);
     	JScrollPane scrollPane = new JScrollPane(productTable);
     	stockPanel.add(scrollPane);
     	logger.exiting(getClass().getName(), "createStockGrid");
@@ -333,7 +442,9 @@ public class IMSGUI extends JFrame
         final String userGuide = "NB Gardens Inventory Management System: User Guide" + "\n"
 		        + "Welcome the NB Gardens Inventory Management System." + "\n"
 		        + "Use the mouse to control the system, the buttons on the right" + "\n"
-		        + "";
+		        + "manage the simulation, the delivery predictions and quantity"
+		        + "changes. If you click the file button you can access the tools"
+		        + "for writing the stock report and the purchase orders.";
         try 
         {
 			userGuideDoc.insertString(0, userGuide, null);

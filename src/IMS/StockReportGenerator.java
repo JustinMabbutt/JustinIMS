@@ -41,8 +41,16 @@ public class StockReportGenerator
 			
 			for(int i = 0; i < stockTable.getColumnCount(); i++)
 			{
-				writer.write(stockTable.getColumnName(i));
-				writer.write("\t");
+				if(String.valueOf(stockTable.getColumnName(i)).length() == 5)
+				{
+					writer.write(stockTable.getColumnName(i));
+					writer.write("\t"); writer.write("\t");
+				}
+				else
+				{
+					writer.write(stockTable.getColumnName(i));
+					writer.write("\t");
+				}
 			}
 			
 			for(int i = 0; i < stockTable.getRowCount(); i++)
@@ -64,6 +72,7 @@ public class StockReportGenerator
 					}
 				}
 			}
+			writer.close();
 		}
 		catch(IOException e)
 		{
@@ -89,8 +98,16 @@ public class StockReportGenerator
 			
 			for(int i = 0; i < stockTable.getColumnCount(); i++)
 			{
-				writer.write(stockTable.getColumnName(i));
-				writer.write("\t");
+				if(String.valueOf(stockTable.getColumnName(i)).length() == 5)
+				{
+					writer.write(stockTable.getColumnName(i));
+					writer.write("\t"); writer.write("\t");
+				}
+				else
+				{
+					writer.write(stockTable.getColumnName(i));
+					writer.write("\t");
+				}
 			}
 			
 			for(int i = 0; i < stockTable.getRowCount(); i++)

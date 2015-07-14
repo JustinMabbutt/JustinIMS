@@ -7,6 +7,7 @@ public class Product
 	 * This means that the program could keep running if connection is lost
 	 */
 	private String productName, price, productID, currentStock, criticalStock;
+	private boolean isPorousware;
 	
 	public Product(String tempID, String tempName, String tempStock, String tempCrit, String tempPrice)
 	{
@@ -42,6 +43,11 @@ public class Product
 		this.price = price;
 	}
 	
+	public void assignPorousware(boolean porousware)
+	{
+		isPorousware = porousware;
+	}
+	
 	public String getProductID()
 	{
 		return productID;
@@ -65,5 +71,10 @@ public class Product
 	public String getPrice()
 	{
 		return price;
+	}
+	
+	public boolean isPorousware()
+	{
+		return isPorousware;
 	}
 }

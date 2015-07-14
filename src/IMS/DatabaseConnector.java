@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 
 import javax.swing.table.DefaultTableModel;
 
+import com.sun.prism.paint.Color;
+
 /**
  * 
  * @author JustinMabbutt
@@ -26,8 +28,8 @@ public class DatabaseConnector
 	private static final Logger logger = Logger.getLogger(IMSGUI.class.getName());
 	
 	static final String JDBCDriver = "com.mysql.jdbc.Driver";
+	//static final String databaseURL = "jdbc:mysql://10.50.20.15:3306/ims";
 	static final String databaseURL = "jdbc:mysql://localhost/ims";
-	
 	static final String username = "JustinMabbutt";
 	static final String password = "wicked";
 	
@@ -128,6 +130,14 @@ public class DatabaseConnector
 						String.valueOf(tempTableModel.getValueAt(i, 2)),
 						String.valueOf(tempTableModel.getValueAt(i, 3)),
 						String.valueOf(tempTableModel.getValueAt(i, 4))));
+				if(String.valueOf(tempTableModel.getValueAt(i, 5)) == "true")
+				{
+					products.get(i).assignPorousware(true);
+				}
+				else
+				{
+					products.get(i).assignPorousware(false);
+				}
 				randomStock = randomGen.nextFloat() * 20.f;
 				prevStock[i] = 60.f + randomStock;
 			}
@@ -156,6 +166,11 @@ public class DatabaseConnector
 			logger.log(Level.SEVERE, se.getMessage(), se);
 		}
 		logger.exiting(getClass().getName(), "updateStockLevel");
+	}
+	
+	public ArrayList<Product> getProducts()
+	{
+		return products;
 	}
 	
 	public void addNewProduct(String name, int quantity, int crit, float price)
@@ -240,10 +255,11 @@ public class DatabaseConnector
 			{
 				dayOrDays = " days";
 			}
-			orderPrediction += "Stock level of product with ID " + (i + 1) + " will drop below critical threshold in " + (int)Math.ceil(timeToDelivery[i] * 7.f) + dayOrDays + " at current rate of sale.";
+			orderPrediction += "Stock level of product with ID " + (i + 1) + " has decreased by " + (int)Math.floor(diffStock[i]) + " since the last stock check. \n"
+			+ "This means that a delivery will be required in " + ((int)Math.ceil(timeToDelivery[i] * 7.f)) + dayOrDays + " at current rate of sale.";
 			if((i + 1) != getAmountOfProducts())
 			{
-				orderPrediction += "\n";
+				orderPrediction += "\n \n";
 			}
 		}
 		logger.exiting(getClass().getName(), "getOrderPrediction");
