@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.Box;
@@ -61,6 +62,8 @@ public class IMSGUI extends JFrame
 	private double randomDecrement;
 	private Random randomGenerator = new Random();
 	private SimulationRunning simRun = SimulationRunning.OFF;
+	private Image nbGardensLogo;
+	private ImageIcon nbLogo;
 	
 	public IMSGUI() 
 	{
@@ -90,8 +93,8 @@ public class IMSGUI extends JFrame
         mainFrame.setResizable(false);
         helpFrame.setResizable(false);
         predictionsFrame.setResizable(false);
-        ImageIcon nbLogo = new ImageIcon("images/nb.png");
-        Image nbGardensLogo = nbLogo.getImage();
+        nbLogo = new ImageIcon("images/nb.png");
+        nbGardensLogo = nbLogo.getImage();
         mainFrame.setIconImage(nbGardensLogo);
         helpFrame.setIconImage(nbGardensLogo);
         predictionsFrame.setIconImage(nbGardensLogo);
@@ -338,7 +341,7 @@ public class IMSGUI extends JFrame
 		} 
         catch (BadLocationException e) 
         {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Exception when assembling user guide", e);
 		}
         userGuideText.setDocument(userGuideDoc);
         userGuideText.setEditable(false);
@@ -365,7 +368,7 @@ public class IMSGUI extends JFrame
 		} 
         catch (BadLocationException e) 
         {
-			e.printStackTrace();
+        	logger.log(Level.SEVERE, "Exception when assembling delivery predictions", e);
 		}
         predictionsText.setDocument(predictionsDoc);
         predictionsText.setEditable(false);
@@ -409,6 +412,7 @@ public class IMSGUI extends JFrame
     	}
     	catch(NumberFormatException nfe)
     	{
+    		logger.log(Level.SEVERE, "Number format exception on user input", nfe);
     		return false;
     	}
     }
@@ -422,6 +426,7 @@ public class IMSGUI extends JFrame
     	}
     	catch(NumberFormatException nfe)
     	{
+    		logger.log(Level.SEVERE, "Number format exception on user input", nfe);
     		return false;
     	}
     }

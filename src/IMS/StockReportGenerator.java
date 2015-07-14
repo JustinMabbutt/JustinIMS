@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JTable;
@@ -66,14 +67,14 @@ public class StockReportGenerator
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Exception when writing purchase order to file", e);
 		}
 		logger.exiting(getClass().getName(), "createPurchaseOrder");
 	}
 	
 	public void createStockReport(JTable stockTable)
 	{
-		logger.entering(getClass().getName(), "CreateStockReport");
+		logger.entering(getClass().getName(), "createStockReport");
 		
 		dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		date = new Date();
@@ -112,8 +113,8 @@ public class StockReportGenerator
 		} 
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Exception when writing stock report to file", e);
 		}
-		logger.exiting(getClass().getName(), "CreateStockReport");
+		logger.exiting(getClass().getName(), "createStockReport");
 	}
 }

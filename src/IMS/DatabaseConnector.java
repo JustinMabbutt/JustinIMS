@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.table.DefaultTableModel;
@@ -33,10 +34,10 @@ public class DatabaseConnector
 	private Random randomGen = new Random();
 	private Connection imsConnector = null;
 	private Statement imsStatement = null;
-	private ResultSet imsResultSet = null;
+	private ResultSet imsResultSet = null, generatedKeys = null;
 	private PreparedStatement updateStock, addStock;
 	private ArrayList<Product> products = new ArrayList<Product>();
-	private int rowCount = 0, IDCount = 48;
+	private int rowCount = 0;
 	private float randomStock;
 	private float[] diffStock, timeToDelivery, prevStock;
 	Object[] newProduct = new Object[5];
@@ -96,7 +97,7 @@ public class DatabaseConnector
 		} 
 		catch (SQLException se) 
 		{
-			se.printStackTrace();
+			logger.log(Level.SEVERE, se.getMessage(), se);
 		}
 		logger.exiting(getClass().getName(), "getAmountOfProducts");
 		return rowCount;
@@ -133,7 +134,7 @@ public class DatabaseConnector
 		}
 		catch(SQLException se)
 		{
-			se.printStackTrace();
+			logger.log(Level.SEVERE, se.getMessage(), se);
 		}
 		logger.exiting(getClass().getName(), "loadData");
 	}
@@ -152,7 +153,7 @@ public class DatabaseConnector
 		}
 		catch(SQLException se)
 		{
-			se.printStackTrace();
+			logger.log(Level.SEVERE, se.getMessage(), se);
 		}
 		logger.exiting(getClass().getName(), "updateStockLevel");
 	}
@@ -163,18 +164,25 @@ public class DatabaseConnector
 		try 
 		{
 			addQuery = "insert into product(ProductName, StockLevel, CriticalThreshold, Price) values (?, ?, ?, ?)";
-			addStock = imsConnector.prepareStatement(addQuery); newProduct[0] = IDCount;
+			addStock = imsConnector.prepareStatement(addQuery, Statement.RETURN_GENERATED_KEYS);
 			addStock.setString(1, name); newProduct[1] = name;
 			addStock.setInt(2, quantity); newProduct[2] = quantity;
 			addStock.setInt(3, crit); newProduct[3] = crit;
 			addStock.setFloat(4, price); newProduct[4] = price;
 			addStock.executeUpdate();
+			generatedKeys = addStock.getGeneratedKeys();
+			while(generatedKeys.next())
+			{
+				if(generatedKeys.last())
+				{
+					newProduct[0] = generatedKeys.getInt(1);
+				}
+			}
 			tempTableModel.insertRow(getAmountOfProducts() - 1, newProduct);
-			IDCount++;
 		} 
 		catch (SQLException se) 
 		{
-			se.printStackTrace();
+			logger.log(Level.SEVERE, se.getMessage(), se);
 		}
 		logger.exiting(getClass().getName(), "addNewProduct");
 	}
@@ -205,7 +213,7 @@ public class DatabaseConnector
 		}
 		catch (SQLException se) 
 		{
-			se.printStackTrace();
+			logger.log(Level.SEVERE, se.getMessage(), se);
 		}
 		logger.exiting(getClass().getName(), "buildTableModel");
 		return new DefaultTableModel(data, columnNames);
