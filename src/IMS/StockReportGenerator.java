@@ -26,6 +26,10 @@ public class StockReportGenerator
 	private String stockReportFilePath, purchaseOrderFilePath;
 	BufferedWriter writer;
 	
+	/**
+	 * Create purchase order using product table
+	 * @param stockTable
+	 */
 	public void createPurchaseOrder(JTable stockTable)
 	{
 		logger.entering(getClass().getName(), "createPurchaseOrder");
@@ -81,6 +85,10 @@ public class StockReportGenerator
 		logger.exiting(getClass().getName(), "createPurchaseOrder");
 	}
 	
+	/**
+	 * Create stock report using product table
+	 * @param stockTable
+	 */
 	public void createStockReport(JTable stockTable)
 	{
 		logger.entering(getClass().getName(), "createStockReport");

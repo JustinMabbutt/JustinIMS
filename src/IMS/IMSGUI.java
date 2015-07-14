@@ -67,7 +67,7 @@ public class IMSGUI extends JFrame
 	private JTable productTable;
 	private DefaultTableCellRenderer tableRenderer;
 	private TableModel stockChecker;
-	private int predictDelivery, startSimulation, randomID;
+	private int predictDelivery, startSimulation, randomID, porouswareStatus;
 	private String deliveryPredictions, changeStockLevel, changeStockID, addNewName, addNewQuantity, addNewCrit, addNewPrice;
 	private Timer simTime = new Timer();
 	private double randomDecrement;
@@ -77,6 +77,9 @@ public class IMSGUI extends JFrame
 	private BufferedImage splash = null; 
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	
+	/**
+	 * Initialise appearance
+	 */
 	public IMSGUI() 
 	{
 		logger.entering(getClass().getName(), "IMSGUI");
@@ -109,6 +112,9 @@ public class IMSGUI extends JFrame
 		logger.exiting(getClass().getName(), "IMSGUI");
     }
 
+	/**
+	 * Display opening splash screen
+	 */
 	public void displaySplash()
 	{
 		logger.entering(getClass().getName(), "displaySplash");
@@ -165,6 +171,9 @@ public class IMSGUI extends JFrame
 		splashFrame.setVisible(true);
 	}
 	
+    /**
+     * Initialise UI elements
+     */
     private void initUI() 
     {
     	logger.entering(getClass().getName(), "initGUI");
@@ -209,11 +218,10 @@ public class IMSGUI extends JFrame
         logger.exiting(getClass().getName(), "initGUI");
     }
     
-    public JFrame getMainFrame()
-    {
-    	return mainFrame;
-    }
     
+    /**
+     * Create the top menu bar
+     */
     private void createMenuBar() 
     {
     	logger.entering(getClass().getName(), "createMenuBar");
@@ -284,14 +292,15 @@ public class IMSGUI extends JFrame
 			    			{
 			    				addNewCrit = JOptionPane.showInputDialog(mainFrame, "Please enter the critical threshold of the new product.", "Add critical threshold", JOptionPane.PLAIN_MESSAGE);
 			    			}
-			    			addNewPrice = addNewCrit = JOptionPane.showInputDialog(mainFrame, "Please enter the selling price of the new product.", "Add price", JOptionPane.PLAIN_MESSAGE);
+			    			addNewPrice = JOptionPane.showInputDialog(mainFrame, "Please enter the selling price of the new product.", "Add price", JOptionPane.PLAIN_MESSAGE);
 			    			if(addNewPrice != null)
 			    			{
 				    			while(!isFloat(addNewPrice))
 				    			{
 				    				addNewPrice = JOptionPane.showInputDialog(mainFrame, "Please enter the selling price of the new product.", "Add price", JOptionPane.PLAIN_MESSAGE);
 				    			}
-								dbConnect.addNewProduct(addNewName, Integer.parseInt(addNewQuantity), Integer.parseInt(addNewCrit), Float.parseFloat(addNewPrice));
+				    			porouswareStatus = JOptionPane.showConfirmDialog(mainFrame, "Is the new product able to have porousware applied", "Choose porousware status", JOptionPane.YES_NO_OPTION);
+								dbConnect.addNewProduct(addNewName, Integer.parseInt(addNewQuantity), Integer.parseInt(addNewCrit), Float.parseFloat(addNewPrice), porouswareStatus);
 								checkStockLevels();
 			    			}
 		    			}
@@ -324,6 +333,9 @@ public class IMSGUI extends JFrame
         logger.exiting(getClass().getName(), "createMenuBar");
     }
     
+    /**
+     * Create the buttons on the right hand side
+     */
     private void createButtons()
     {  
     	logger.entering(getClass().getName(), "createButtons");
@@ -360,7 +372,7 @@ public class IMSGUI extends JFrame
     			predictDelivery = JOptionPane.showConfirmDialog(mainFrame, "Do you wish to predict when deliveries will be required?", "Predict when deliveries will be required", JOptionPane.YES_NO_OPTION);
     			if(predictDelivery == JOptionPane.YES_OPTION)
     			{
-    				deliveryPredictions = dbConnect.getOrderPrediction();
+    				deliveryPredictions = dbConnect.getDeliveryPrediction();
     				deliveryPredictions(deliveryPredictions);
 	    		}
 	    	}
@@ -398,6 +410,10 @@ public class IMSGUI extends JFrame
     	logger.exiting(getClass().getName(), "createButtons");
     }
     
+    /**
+     * Create the central table of products
+     * @param tableModel
+     */
     private void createStockGrid(DefaultTableModel tableModel)
     {
     	logger.entering(getClass().getName(), "createStockGrid");
@@ -429,6 +445,9 @@ public class IMSGUI extends JFrame
     	logger.exiting(getClass().getName(), "createStockGrid");
     }  
     
+    /**
+     * Create the user guide accessible from the menu bar
+     */
     private void userGuide()
     {
     	logger.entering(getClass().getName(), "userGuide");
@@ -462,6 +481,10 @@ public class IMSGUI extends JFrame
         logger.exiting(getClass().getName(), "userGuide");
     }
     
+    /**
+     * Display the delivery predictions
+     * @param deliveries
+     */
     private void deliveryPredictions(String deliveries)
     {
     	logger.entering(getClass().getName(), "deliveryPredictions");
@@ -500,6 +523,9 @@ public class IMSGUI extends JFrame
 		}
 	}
     
+    /**
+     * Check stock levels are above critical threshold
+     */
     private void checkStockLevels()
     {
     	logger.entering(getClass().getName(), "checkStockLevels");
@@ -514,6 +540,11 @@ public class IMSGUI extends JFrame
     	logger.exiting(getClass().getName(), "checkStockLevels");
     }
     
+    /**
+     * Check if user input is integer value
+     * @param userEntry
+     * @return true or false
+     */
     private boolean isNumber(String userEntry)
     { 	
     	try
@@ -528,6 +559,11 @@ public class IMSGUI extends JFrame
     	}
     }
     
+    /**
+     * Check if user input is decimal value
+     * @param userEntry
+     * @return true or false
+     */
     private boolean isFloat(String userEntry)
     {
     	try
@@ -542,6 +578,10 @@ public class IMSGUI extends JFrame
     	}
     }
     
+    /**
+     * Show alert when stock is low
+     * @param productID
+     */
     private void showStockAlert(int productID)
     {
     	logger.entering(getClass().getName(), "showStockAlert");

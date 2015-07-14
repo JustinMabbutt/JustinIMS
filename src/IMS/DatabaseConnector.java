@@ -15,8 +15,6 @@ import java.util.logging.Logger;
 
 import javax.swing.table.DefaultTableModel;
 
-import com.sun.prism.paint.Color;
-
 /**
  * 
  * @author JustinMabbutt
@@ -25,6 +23,9 @@ import com.sun.prism.paint.Color;
 
 public class DatabaseConnector 
 {
+	/**
+	 * Database Connector handles retrieval and processing of information from the database
+	 */
 	private static final Logger logger = Logger.getLogger(IMSGUI.class.getName());
 	
 	static final String JDBCDriver = "com.mysql.jdbc.Driver";
@@ -42,10 +43,13 @@ public class DatabaseConnector
 	private int rowCount = 0;
 	private float randomStock;
 	private float[] diffStock, timeToDelivery, prevStock;
-	Object[] newProduct = new Object[5];
+	Object[] newProduct = new Object[6];
 	private DefaultTableModel tempTableModel = new DefaultTableModel();
 	private String updateQuery, orderPrediction, dayOrDays, addQuery;
 	
+	/**
+	 * Initialise database connection
+	 */
 	public DatabaseConnector()
 	{
 		logger.entering(getClass().getName(), "DatabaseConnector");
@@ -67,6 +71,9 @@ public class DatabaseConnector
 		logger.exiting(getClass().getName(), "DatabaseConnector");
 	}
 	
+	/**
+	 * Close database connection at system exit
+	 */
 	public void closeDatabaseConnection()
 	{
 		logger.entering(getClass().getName(), "closeDatabaseConnection");
@@ -87,6 +94,10 @@ public class DatabaseConnector
 		logger.exiting(getClass().getName(), "closeDatabaseConnection");
 	}
 	
+	/**
+	 * Retrieve amount of products (rows)
+	 * @return amount of products
+	 */
 	public int getAmountOfProducts()
 	{
 		logger.entering(getClass().getName(), "getAmountOfProducts");
@@ -105,6 +116,9 @@ public class DatabaseConnector
 		return rowCount;
 	}
 	
+	/**
+	 * Load product information from database into table model
+	 */
 	public void loadData()
 	{
 		logger.entering(getClass().getName(), "loadData");
@@ -149,6 +163,11 @@ public class DatabaseConnector
 		logger.exiting(getClass().getName(), "loadData");
 	}
 	
+	/**
+	 * Update stock level of a product
+	 * @param productID
+	 * @param stockChange
+	 */
 	public void updateStockLevel(int productID, int stockChange)
 	{
 		logger.entering(getClass().getName(), "updateStockLevel");
@@ -168,22 +187,33 @@ public class DatabaseConnector
 		logger.exiting(getClass().getName(), "updateStockLevel");
 	}
 	
-	public ArrayList<Product> getProducts()
-	{
-		return products;
-	}
-	
-	public void addNewProduct(String name, int quantity, int crit, float price)
+	/**
+	 * Add new product to database and GUI table
+	 * @param name
+	 * @param quantity
+	 * @param crit
+	 * @param price
+	 */
+	public void addNewProduct(String name, int quantity, int crit, float price, int porousware)
 	{
 		logger.entering(getClass().getName(), "addNewProduct");
 		try 
 		{
-			addQuery = "insert into product(ProductName, StockLevel, CriticalThreshold, Price) values (?, ?, ?, ?)";
+			addQuery = "insert into product(ProductName, StockLevel, CriticalThreshold, Price, Porousware) values (?, ?, ?, ?, ?)";
 			addStock = imsConnector.prepareStatement(addQuery, Statement.RETURN_GENERATED_KEYS);
 			addStock.setString(1, name); newProduct[1] = name;
 			addStock.setInt(2, quantity); newProduct[2] = quantity;
 			addStock.setInt(3, crit); newProduct[3] = crit;
 			addStock.setFloat(4, price); newProduct[4] = price;
+			addStock.setFloat(5, porousware);
+			if(porousware == 1)
+			{
+				newProduct[5] = "false";
+			}
+			else
+			{
+				newProduct[5] = "true";
+			}
 			addStock.executeUpdate();
 			generatedKeys = addStock.getGeneratedKeys();
 			while(generatedKeys.next())
@@ -202,6 +232,11 @@ public class DatabaseConnector
 		logger.exiting(getClass().getName(), "addNewProduct");
 	}
 	
+	/**
+	 * Build table model from result set
+	 * @param rs the result set of the query
+	 * @return the table model for use in the GUI
+	 */
 	public DefaultTableModel buildTableModel(ResultSet rs)
 	{
 		logger.entering(getClass().getName(), "buildTableModel");
@@ -234,12 +269,20 @@ public class DatabaseConnector
 		return new DefaultTableModel(data, columnNames);
 	}
 	
+	/**
+	 * Get table from database
+	 * @return table model for use in GUI
+	 */
 	public DefaultTableModel getTableModel()
 	{
 		return tempTableModel;
 	}
 	
-	public String getOrderPrediction()
+	/**
+	 * Get predictions of delivery requirements using rate of sale calculation
+	 * @return String of delivery predictions
+	 */
+	public String getDeliveryPrediction()
 	{
 		logger.entering(getClass().getName(), "getOrderPrediction");
 		orderPrediction = "NB Gardens Delivery Predictions" + "\n";

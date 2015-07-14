@@ -1,6 +1,5 @@
 package IMS;
 
-import java.awt.Frame;
 import java.util.logging.Logger;
 
 /**
@@ -14,6 +13,10 @@ public class InventoryManagementSystem
 	private static final Logger logger = Logger.getLogger(InventoryManagementSystem.class.getName());
 	private static IMSGUI imsgui = new IMSGUI();
 	
+    /**
+     * Main entry point for program - loads splash screen
+     * @param args
+     */
     public static void main(String[] args)
     {
     	logger.entering(InventoryManagementSystem.class.getName(), "main");
