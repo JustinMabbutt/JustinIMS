@@ -166,6 +166,7 @@ public class IMSGUI extends JFrame
 			{
 				initUI();
 				splashFrame.dispose();
+				dbConnect.closeDatabaseConnection();
 			}
 		});
 		splashFrame.add(splashLabel, BorderLayout.CENTER);
