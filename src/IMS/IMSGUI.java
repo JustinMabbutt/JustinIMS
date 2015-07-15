@@ -120,7 +120,8 @@ public class IMSGUI extends JFrame
 		logger.entering(getClass().getName(), "displaySplash");
 		try 
 		{
-			splash = ImageIO.read(new File("C:/Users/justi_000/workspace/JustinIMS/images/splash.jpg"));
+			//splash = ImageIO.read(new File("C:/Users/justi_000/workspace/JustinIMS/images/splash.jpg"));
+			splash = ImageIO.read(new File("home/developer/JustinIMS/images/splash.jpg"));
 		} 
 		catch (IOException ie) 
 		{
