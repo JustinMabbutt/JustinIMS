@@ -229,7 +229,7 @@ public class IMSGUI extends JFrame
         JMenuBar menuBar = new JMenuBar();
         JMenu file = new JMenu("File");
         JMenu help = new JMenu("Help");
-		ImageIcon exitIcon = new ImageIcon("images/exit.jpg");
+		ImageIcon exitIcon = new ImageIcon("/home/developer/JustinIMS/images/exit.jpg");
         JMenuItem exit = new JMenuItem("Exit", exitIcon);
         exit.setToolTipText("Exit application");
         exit.addActionListener(new ActionListener() 
@@ -242,7 +242,7 @@ public class IMSGUI extends JFrame
             }
         });
         
-        ImageIcon printPurchaseOrderIcon = new ImageIcon("images/txt.png");
+        ImageIcon printPurchaseOrderIcon = new ImageIcon("/home/developer/JustinIMS/images/txt.png");
         JMenuItem printPurchaseOrder = new JMenuItem("Write Purchase Order", printPurchaseOrderIcon);
         printPurchaseOrder.setToolTipText("Write a purchase order of items with critically low stock to a text file");
         printPurchaseOrder.addActionListener(new ActionListener()
@@ -255,7 +255,7 @@ public class IMSGUI extends JFrame
             }
         });
         
-        ImageIcon printStockReportIcon = new ImageIcon("images/txt.png");
+        ImageIcon printStockReportIcon = new ImageIcon("/home/developer/JustinIMS/images/txt.png");
         JMenuItem printStockList = new JMenuItem("Write Stock List", printStockReportIcon);
         printStockList.setToolTipText("Write the current stock list to a text file");
         printStockList.addActionListener(new ActionListener()
@@ -268,7 +268,7 @@ public class IMSGUI extends JFrame
             }
         });
         
-        ImageIcon addIcon = new ImageIcon("images/plus.png");
+        ImageIcon addIcon = new ImageIcon("/home/developer/JustinIMS/images/plus.png");
         JMenuItem addStockItem = new JMenuItem("Add new product to database", addIcon);
         addStockItem.setToolTipText("Add a new product to the database");
         addStockItem.addActionListener(new ActionListener()
@@ -310,7 +310,7 @@ public class IMSGUI extends JFrame
 			}
 		});
         
-        ImageIcon helpIcon = new ImageIcon("images/help.jpg");
+        ImageIcon helpIcon = new ImageIcon("/home/developer/JustinIMS/images/help.jpg");
         JMenuItem displayHelp = new JMenuItem("Display the User Guide", helpIcon);
         displayHelp.setToolTipText("Open the User Guide");
         displayHelp.addActionListener(new ActionListener()
