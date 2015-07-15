@@ -1,9 +1,9 @@
-NB Gardens Stock Report - 2015/07/14 20:18:52
+NB Gardens Stock Report - 2015/07/15 11:24:24
 
-ProductID	ProductName	StockLevel	CriticalThreshold	Price	Porousware	
+ProductID	ProductName	StockLevel	CriticalThreshold	Price		Porousware	
 1		Hippy Gnome		7		5		12.0		false		
 2		King Gnome		19		5		20.0		true		
-3		Queen Gnome		2		5		15.0		false		
+3		Queen Gnome		22		5		15.0		false		
 4		Nuclear Gnome		9		5		18.0		true		
 5		Biohazard Gnome		17		5		17.5		true		
 6		Obama Gnome		6		5		30.0		true		
