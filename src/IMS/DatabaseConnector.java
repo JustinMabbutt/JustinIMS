@@ -289,20 +289,28 @@ public class DatabaseConnector
 		for(int i = 0; i < getAmountOfProducts(); i++)
 		{
 			diffStock[i] = prevStock[i] - Float.parseFloat(products.get(i).getCurrentStock());
-			timeToDelivery[i] = Float.parseFloat(products.get(i).getCurrentStock()) / diffStock[i];
-			if((int)Math.ceil(timeToDelivery[i] * 7.f) == 1)
+			if(diffStock[i] > 0.f)
 			{
-				dayOrDays = " day";
+				timeToDelivery[i] = Float.parseFloat(products.get(i).getCurrentStock()) / diffStock[i];
+				if((int)Math.ceil(timeToDelivery[i] * 7.f) == 1)
+				{
+					dayOrDays = " day";
+				}
+				else
+				{
+					dayOrDays = " days";
+				}
+				orderPrediction += "Stock level of product with ID " + (i + 1) + " has decreased by " + (int)Math.floor(diffStock[i]) + " since the last stock check. \n"
+				+ "This means that a delivery will be required in " + ((int)Math.ceil(timeToDelivery[i] * 7.f)) + dayOrDays + " at current rate of sale.";
+				if((i + 1) != getAmountOfProducts())
+				{
+					orderPrediction += "\n \n";
+				}
 			}
 			else
 			{
-				dayOrDays = " days";
-			}
-			orderPrediction += "Stock level of product with ID " + (i + 1) + " has decreased by " + (int)Math.floor(diffStock[i]) + " since the last stock check. \n"
-			+ "This means that a delivery will be required in " + ((int)Math.ceil(timeToDelivery[i] * 7.f)) + dayOrDays + " at current rate of sale.";
-			if((i + 1) != getAmountOfProducts())
-			{
-				orderPrediction += "\n \n";
+				orderPrediction += "Stock level of product with ID " + (i + 1) + " has increased by " + (int)Math.floor(diffStock[i]) + " since the last stock check. \n"
+						+ "This means that a delivery will not be not required for the time being.";
 			}
 		}
 		logger.exiting(getClass().getName(), "getOrderPrediction");
