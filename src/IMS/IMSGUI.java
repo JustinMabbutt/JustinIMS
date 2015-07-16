@@ -521,7 +521,7 @@ public class IMSGUI extends JFrame
 			randomID = randomGenerator.nextInt(32) + 1;
 			randomDecrement = -(randomGenerator.nextInt(2) + 1);
 			dbConnect.getTableModel().setValueAt(Double.parseDouble(String.valueOf(dbConnect.getTableModel().getValueAt(randomID, 2))) + randomDecrement, randomID, 2);
-			JOptionPane.showMessageDialog(mainFrame, "Stock for Product ID: " + randomID + " has been decremented by " + randomDecrement, "Simulation Information", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, "Stock for Product ID: " + randomID + " has been decremented by " + (int)randomDecrement, "Simulation Information", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
     
