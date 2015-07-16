@@ -65,10 +65,9 @@ public class IMSGUI extends JFrame
 	private JTable productTable;
 	private DefaultTableCellRenderer tableRenderer;
 	private TableModel stockChecker;
-	private int predictDelivery, startSimulation, randomID, porouswareStatus;
+	private int predictDelivery, startSimulation, randomID, porouswareStatus, randomDecrement;
 	private String deliveryPredictions, changeStockLevel, changeStockID, addNewName, addNewQuantity, addNewCrit, addNewPrice;
-	private Timer simTime = new Timer();
-	private double randomDecrement;
+	private Timer simTime = new Timer(), splashTime = new Timer();
 	private Random randomGenerator = new Random();
 	private SimulationRunning simRun = SimulationRunning.OFF;
 	private Image nbGardensLogo;
@@ -140,7 +139,7 @@ public class IMSGUI extends JFrame
         splashFrame.setIconImage(nbGardensLogo);
 		splashFrame.add(splashLabel, BorderLayout.CENTER);
 		splashFrame.setVisible(true);
-		simTime.schedule(new deleteSplashTask(), 2 * 1000);
+		splashTime.schedule(new deleteSplashTask(), 2000);
 	}
 	
     /**
@@ -328,8 +327,8 @@ public class IMSGUI extends JFrame
     				switch(simRun)
     				{
     				case OFF:
-    					simRun = SimulationRunning.ON;				    
-    					simTime.schedule(new randomDecrementTask(), 5 * 1000);  
+    					simRun = SimulationRunning.ON;	
+    					simTime.scheduleAtFixedRate(new randomDecrementTask(), 1000, 5000);  
     					break;
     				case ON:
     					simRun = SimulationRunning.OFF;
@@ -498,7 +497,7 @@ public class IMSGUI extends JFrame
 		{
 			randomID = randomGenerator.nextInt(32) + 1;
 			randomDecrement = -(randomGenerator.nextInt(2) + 1);
-			dbConnect.getTableModel().setValueAt(Double.parseDouble(String.valueOf(dbConnect.getTableModel().getValueAt(randomID, 2))) + randomDecrement, randomID, 2);
+			dbConnect.getTableModel().setValueAt(Integer.parseInt(String.valueOf(dbConnect.getTableModel().getValueAt(randomID, 2))) + randomDecrement, randomID, 2);
 			JOptionPane.showMessageDialog(mainFrame, "Stock for Product ID: " + randomID + " has been decremented by " + (int)randomDecrement, "Simulation Information", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
@@ -512,7 +511,7 @@ public class IMSGUI extends JFrame
    		{
    			initUI();
 			splashFrame.dispose();
-			simTime.cancel();
+			splashTime.cancel();
    		}
    	}
     
