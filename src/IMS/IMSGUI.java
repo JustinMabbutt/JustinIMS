@@ -7,8 +7,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -136,41 +134,13 @@ public class IMSGUI extends JFrame
         nbGardensLogo = nbLogo.getImage();
         splashFrame.setResizable(false);
         splashFrame.setTitle("Welcome to the NB Gardens IMS");
-        splashFrame.setSize(splashIcon.getIconWidth() + 15, splashIcon.getIconHeight() + 20);  
+        splashFrame.setSize(splashIcon.getIconWidth(), splashIcon.getIconHeight());  
+        splashFrame.setUndecorated(true);
         splashFrame.setLocation((int)screenSize.getWidth() / 2 - splashIcon.getIconWidth() / 2, (int)screenSize.getHeight() / 2 - splashIcon.getIconHeight() / 2);
         splashFrame.setIconImage(nbGardensLogo);
-        splashLabel.addMouseListener(new MouseListener() 
-        {		
-			@Override
-			public void mouseReleased(MouseEvent e)
-			{	
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent e)
-			{	
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e)
-			{	
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) 
-			{				
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-				initUI();
-				splashFrame.dispose();
-				dbConnect.closeDatabaseConnection();
-			}
-		});
 		splashFrame.add(splashLabel, BorderLayout.CENTER);
 		splashFrame.setVisible(true);
+		simTime.schedule(new deleteSplashTask(), 2 * 1000);
 	}
 	
     /**
@@ -231,6 +201,7 @@ public class IMSGUI extends JFrame
         JMenu file = new JMenu("File");
         JMenu help = new JMenu("Help");
 		ImageIcon exitIcon = new ImageIcon("/home/developer/JustinIMS/images/exit.jpg");
+        //ImageIcon exitIcon = new ImageIcon("images/exit.jpg");
         JMenuItem exit = new JMenuItem("Exit", exitIcon);
         exit.setToolTipText("Exit application");
         exit.addActionListener(new ActionListener() 
@@ -244,6 +215,7 @@ public class IMSGUI extends JFrame
         });
         
         ImageIcon printPurchaseOrderIcon = new ImageIcon("/home/developer/JustinIMS/images/txt.png");
+        //ImageIcon printPurchaseOrderIcon = new ImageIcon("images/txt.png");
         JMenuItem printPurchaseOrder = new JMenuItem("Write Purchase Order", printPurchaseOrderIcon);
         printPurchaseOrder.setToolTipText("Write a purchase order of items with critically low stock to a text file");
         printPurchaseOrder.addActionListener(new ActionListener()
@@ -257,6 +229,7 @@ public class IMSGUI extends JFrame
         });
         
         ImageIcon printStockReportIcon = new ImageIcon("/home/developer/JustinIMS/images/txt.png");
+        //ImageIcon printStockReportIcon = new ImageIcon("images/txt.png");
         JMenuItem printStockList = new JMenuItem("Write Stock List", printStockReportIcon);
         printStockList.setToolTipText("Write the current stock list to a text file");
         printStockList.addActionListener(new ActionListener()
@@ -270,6 +243,7 @@ public class IMSGUI extends JFrame
         });
         
         ImageIcon addIcon = new ImageIcon("/home/developer/JustinIMS/images/plus.png");
+        //ImageIcon addIcon = new ImageIcon("images/plus.png");
         JMenuItem addStockItem = new JMenuItem("Add new product to database", addIcon);
         addStockItem.setToolTipText("Add a new product to the database");
         addStockItem.addActionListener(new ActionListener()
@@ -312,6 +286,7 @@ public class IMSGUI extends JFrame
 		});
         
         ImageIcon helpIcon = new ImageIcon("/home/developer/JustinIMS/images/help.jpg");
+        //ImageIcon helpIcon = new ImageIcon("images/help.jpg");
         JMenuItem displayHelp = new JMenuItem("Display the User Guide", helpIcon);
         displayHelp.setToolTipText("Open the User Guide");
         displayHelp.addActionListener(new ActionListener()
@@ -512,8 +487,11 @@ public class IMSGUI extends JFrame
         predictionsFrame.add(scrollPane);
         predictionsFrame.setVisible(true);
         logger.exiting(getClass().getName(), "deliveryPredictions");
-    } 	
-  
+    }
+    
+    /**
+     * Random stock level decrement of random product for the simulation
+     */
     private class randomDecrementTask extends TimerTask
 	{
 		public void run()
@@ -524,6 +502,19 @@ public class IMSGUI extends JFrame
 			JOptionPane.showMessageDialog(mainFrame, "Stock for Product ID: " + randomID + " has been decremented by " + (int)randomDecrement, "Simulation Information", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
+    
+    /**
+     * Task to delete the opening splash screen
+     */
+    private class deleteSplashTask extends TimerTask
+   	{
+   		public void run()
+   		{
+   			initUI();
+			splashFrame.dispose();
+			simTime.cancel();
+   		}
+   	}
     
     /**
      * Check stock levels are above critical threshold
@@ -588,6 +579,7 @@ public class IMSGUI extends JFrame
     {
     	logger.entering(getClass().getName(), "showStockAlert");
     	JOptionPane.showMessageDialog(mainFrame, "Stock for Product ID: " + productID + " is below the critical threshold", "Stock Level Alert!", JOptionPane.WARNING_MESSAGE);
+    	reportGenerator.createPurchaseOrder(productTable);
     	logger.exiting(getClass().getName(), "showStockAlert");
     }
 }
