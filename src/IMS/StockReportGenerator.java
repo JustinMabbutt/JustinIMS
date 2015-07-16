@@ -35,8 +35,8 @@ public class StockReportGenerator
 		logger.entering(getClass().getName(), "createPurchaseOrder");
 		dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		date = new Date();
-		purchaseOrderFilePath = "C:/Users/justi_000/workspace/JustinIMS/PurchaseOrder.txt";
-		//purchaseOrderFilePath = "/home/developer/JustinIMS/PurchaseOrder.txt";
+		//purchaseOrderFilePath = "C:/Users/justi_000/workspace/JustinIMS/PurchaseOrder.txt";
+		purchaseOrderFilePath = "/home/developer/JustinIMS/PurchaseOrder.txt";
 		try
 		{
 			writer = new BufferedWriter(new FileWriter(purchaseOrderFilePath));
@@ -96,8 +96,8 @@ public class StockReportGenerator
 		
 		dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		date = new Date();
-		stockReportFilePath = "C:/Users/justi_000/workspace/JustinIMS/StockReport.txt";
-		//stockReportFilePath = "/home/developer/JustinIMS/StockReport.txt";
+		//stockReportFilePath = "C:/Users/justi_000/workspace/JustinIMS/StockReport.txt";
+		stockReportFilePath = "/home/developer/JustinIMS/StockReport.txt";
 		try
 		{
 			writer = new BufferedWriter(new FileWriter(stockReportFilePath));
