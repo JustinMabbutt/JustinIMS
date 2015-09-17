@@ -53,6 +53,7 @@ import javax.swing.text.StyleContext;
 
 public class IMSGUI extends JFrame
 {
+	private static final long serialVersionUID = -5827427968821974363L;
 	private static final Logger logger = Logger.getLogger(IMSGUI.class.getName());
 	
 	StockReportGenerator reportGenerator = new StockReportGenerator();
@@ -396,6 +397,8 @@ public class IMSGUI extends JFrame
 		tableRenderer = new DefaultTableCellRenderer();
 		productTable = new JTable(tableModel)
 		{
+			private static final long serialVersionUID = -2082657485290734264L;
+
 			@Override
 			public boolean isCellEditable(int row, int column)
 	    	{
